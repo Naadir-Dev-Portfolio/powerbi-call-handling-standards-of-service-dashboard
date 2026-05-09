@@ -1,0 +1,3 @@
+EmergencyClassKey,Emergency Classification,IsEmergency
+1,Emergency,True
+2,Non-Emergency,False

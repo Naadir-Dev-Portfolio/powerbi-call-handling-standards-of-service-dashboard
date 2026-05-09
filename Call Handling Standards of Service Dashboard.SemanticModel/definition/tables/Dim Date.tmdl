@@ -1,0 +1,166 @@
+table 'Dim Date'
+	lineageTag: b7b65d9b-1838-5ae2-a6b6-54a65106e06d
+
+	column 'Date Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 6d5e7fc7-9040-5f3c-bc25-eec40be04cb7
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4090f265-648c-5039-8f83-b893a680bcc7
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Date Label'
+		dataType: string
+		lineageTag: cffb17e2-44e1-5c32-b78f-10ab902a3667
+		summarizeBy: none
+		sourceColumn: DateLabel
+
+	column Year
+		dataType: int64
+		lineageTag: 9b5eddca-28bb-5977-90da-6e839b661121
+		summarizeBy: none
+		sourceColumn: Year
+
+	column 'Quarter Number'
+		dataType: int64
+		isHidden
+		lineageTag: d4e67f0d-ea30-5783-9857-2b7e1b0bf85a
+		summarizeBy: none
+		sourceColumn: QuarterNumber
+
+	column 'Year Quarter'
+		dataType: string
+		lineageTag: f6ebf739-e0d6-586d-bfa1-94b1f1539d31
+		summarizeBy: none
+		sourceColumn: YearQuarter
+
+	column 'Month Start'
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 9fa9083e-1418-50f9-a830-790f6fe4aa91
+		summarizeBy: none
+		sourceColumn: MonthStart
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		lineageTag: 7b651ae9-ad06-57e1-9632-03303cd3ebc4
+		summarizeBy: none
+		sourceColumn: MonthNumber
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 46d4db36-a01a-5022-8747-34c6098e7a00
+		summarizeBy: none
+		sourceColumn: MonthName
+		sortByColumn: 'Month Number'
+
+	column 'Month Short'
+		dataType: string
+		isHidden
+		lineageTag: 822b95ea-6b43-583a-be68-6bc4b74ddf4f
+		summarizeBy: none
+		sourceColumn: MonthShort
+		sortByColumn: 'Month Number'
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 54e7bcde-21fa-52cd-af80-6aef66b529ed
+		summarizeBy: none
+		sourceColumn: YearMonth
+		sortByColumn: 'Year Month Sort'
+
+	column 'Year Month Sort'
+		dataType: int64
+		isHidden
+		lineageTag: df284b8a-6959-55fb-9b35-ffef2bc0bd1c
+		summarizeBy: none
+		sourceColumn: YearMonthSort
+
+	column 'Week Start'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 65f8f0ff-b0ba-5b7d-bd38-f0a41d9ce0d8
+		summarizeBy: none
+		sourceColumn: WeekStart
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'ISO Week Number'
+		dataType: int64
+		lineageTag: 77d0a407-f7f3-5b74-b0e5-c48e1ea1e1d3
+		summarizeBy: none
+		sourceColumn: ISOWeekNumber
+
+	column 'Day Of Week Number'
+		dataType: int64
+		isHidden
+		lineageTag: c90370c3-12ad-5cd9-9e10-f083e20cb6af
+		summarizeBy: none
+		sourceColumn: DayOfWeekNumber
+
+	column 'Day Of Week'
+		dataType: string
+		lineageTag: 0e1c5f21-d3fc-505d-a231-6246efd9e918
+		summarizeBy: none
+		sourceColumn: DayOfWeekName
+		sortByColumn: 'Day Of Week Number'
+
+	column 'Is Weekend'
+		dataType: boolean
+		isHidden
+		lineageTag: 6cac45db-6ecb-592f-b312-b342bb16fa62
+		summarizeBy: none
+		sourceColumn: IsWeekend
+
+	column 'Is Working Day'
+		dataType: boolean
+		lineageTag: 64545f7a-9b6a-535e-844c-7f4ff4a8b2c7
+		summarizeBy: none
+		sourceColumn: IsWorkingDay
+
+	partition 'Dim Date' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_date.csv"), [Delimiter=",", Columns=18, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"DateKey", Int64.Type},
+							{"Date", type date},
+							{"DateLabel", type text},
+							{"Year", Int64.Type},
+							{"QuarterNumber", Int64.Type},
+							{"YearQuarter", type text},
+							{"MonthStart", type date},
+							{"MonthNumber", Int64.Type},
+							{"MonthName", type text},
+							{"MonthShort", type text},
+							{"YearMonth", type text},
+							{"YearMonthSort", Int64.Type},
+							{"WeekStart", type date},
+							{"ISOWeekNumber", Int64.Type},
+							{"DayOfWeekNumber", Int64.Type},
+							{"DayOfWeekName", type text},
+							{"IsWeekend", type logical},
+							{"IsWorkingDay", type logical}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

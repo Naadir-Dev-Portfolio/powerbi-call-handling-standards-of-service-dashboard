@@ -1,0 +1,663 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.8.0/schema.json",
+  "name": "896f494f3504ba058c24",
+  "position": {
+    "x": 53.19587628865979,
+    "y": 254.84536082474227,
+    "z": 31000,
+    "height": 425.56701030927832,
+    "width": 1216.7010309278351,
+    "tabOrder": 26000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Date"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "Dim Date.Date",
+              "nativeQueryRef": "Date",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Time Slot"
+                    }
+                  },
+                  "Property": "Half Hour"
+                }
+              },
+              "queryRef": "Dim Time Slot.Half Hour",
+              "nativeQueryRef": "Half Hour",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Team"
+                    }
+                  },
+                  "Property": "Team"
+                }
+              },
+              "queryRef": "Dim Team.Team",
+              "nativeQueryRef": "Team",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Call Group"
+                    }
+                  },
+                  "Property": "Call Group"
+                }
+              },
+              "queryRef": "Dim Call Group.Call Group",
+              "nativeQueryRef": "Call Group",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Queue"
+                    }
+                  },
+                  "Property": "Queue"
+                }
+              },
+              "queryRef": "Dim Queue.Queue",
+              "nativeQueryRef": "Queue",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Call Type"
+                    }
+                  },
+                  "Property": "Call Type"
+                }
+              },
+              "queryRef": "Dim Call Type.Call Type",
+              "nativeQueryRef": "Call Type",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Emergency Classification"
+                    }
+                  },
+                  "Property": "Emergency Classification"
+                }
+              },
+              "queryRef": "Dim Emergency Classification.Emergency Classification",
+              "nativeQueryRef": "Emergency Classification",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim Working Hours"
+                    }
+                  },
+                  "Property": "Working Hours"
+                }
+              },
+              "queryRef": "Dim Working Hours.Working Hours",
+              "nativeQueryRef": "Working Hours",
+              "active": false
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Calls Offered"
+                }
+              },
+              "queryRef": "Fact Telephony.Calls Offered",
+              "nativeQueryRef": "Calls Offered"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Calls Answered"
+                }
+              },
+              "queryRef": "Fact Telephony.Calls Answered",
+              "nativeQueryRef": "Calls Answered"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Calls Abandoned"
+                }
+              },
+              "queryRef": "Fact Telephony.Calls Abandoned",
+              "nativeQueryRef": "Calls Abandoned"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Standards of Service %"
+                }
+              },
+              "queryRef": "Fact Telephony.Standards of Service %",
+              "nativeQueryRef": "Standards of Service %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Average Speed To Answer"
+                }
+              },
+              "queryRef": "Fact Telephony.Average Speed To Answer",
+              "nativeQueryRef": "Average Speed To Answer"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Average Handling Time"
+                }
+              },
+              "queryRef": "Fact Telephony.Average Handling Time",
+              "nativeQueryRef": "Average Handling Time"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact Telephony"
+                    }
+                  },
+                  "Property": "Total Talk Time"
+                }
+              },
+              "queryRef": "Fact Telephony.Total Talk Time",
+              "nativeQueryRef": "Total Talk Time"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E5E7EB'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0F172A'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FDE3C5'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "backColorPrimary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 4,
+                      "Percent": 0.6
+                    }
+                  }
+                }
+              }
+            },
+            "backColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FDE3C5'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "133.41849262919982D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Calls Offered"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "161.64028809513505D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Standards of Service %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "149.37025217245304D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Calls Abandoned"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "149.3511641948265D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Calls Answered"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "155.22114879044312D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Answer Rate %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "199.5566989665915D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Total Handling Time Seconds"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "162.34973509565668D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Average Speed To Answer"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "170.9013301662715D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Average Handling Time"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "152.01260915014123D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact Telephony.Total Talk Time"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFDF9'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "100D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 4,
+                      "Percent": 0.6
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "5D"
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Detailed aggregate records'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Heading2'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#021B37'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI Semibold'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'BottomRight'"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "70L"
+                }
+              }
+            },
+            "shadowSpread": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            },
+            "shadowBlur": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            },
+            "angle": {
+              "expr": {
+                "Literal": {
+                  "Value": "45L"
+                }
+              }
+            },
+            "shadowDistance": {
+              "expr": {
+                "Literal": {
+                  "Value": "10L"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Call Handling Standards of Service Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ac57fe70-1122-4de1-b472-0cd38b6f94ff"
+  }
+}

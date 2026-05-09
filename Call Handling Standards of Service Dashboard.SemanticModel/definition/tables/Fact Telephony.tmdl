@@ -1,0 +1,588 @@
+table 'Fact Telephony'
+	lineageTag: 0c6926fd-059c-5c61-b233-aacfbed46313
+
+	measure 'Calls Offered' = SUM('Fact Telephony'[Calls Offered Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 1ea835e3-a2ae-5103-83c7-c80d92388130
+
+	measure 'Service Level Calls Offered' = SUM('Fact Telephony'[Service Level Calls Offered Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 94b546d0-b091-5a82-9d9c-34069d0653d4
+
+	measure 'Calls Answered' = SUM('Fact Telephony'[Calls Answered Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: a0dff41d-e7a6-56ac-8911-9b9e2b62b1c9
+
+	measure 'Calls Abandoned Within Service Threshold' = SUM('Fact Telephony'[Calls Abandoned Within Threshold Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 177aaba1-c7ef-5497-81d9-5b86101d99ba
+
+	measure 'Calls Abandoned After Service Threshold' = SUM('Fact Telephony'[Calls Abandoned After Threshold Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 43c5e17e-bd58-5c71-9aac-cce615f34a7a
+
+	measure 'Calls Abandoned' = [Calls Abandoned Within Service Threshold] + [Calls Abandoned After Service Threshold]
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 17df44e9-6851-5e02-a1ac-29c7a15f8919
+
+	measure 'Calls Not Answered' = [Calls Offered] - [Calls Answered]
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: 746fa98a-c36f-55ec-9039-f8ef22bee0fa
+
+	measure 'Calls Missed' = SUM('Fact Telephony'[RONA Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: adf171bd-002a-5c49-b04f-68d3a41383ec
+
+	measure 'Calls Transferred' = BLANK()
+		formatString: #,##0
+		displayFolder: 09 Unavailable Source Fields
+		lineageTag: 1fab9de3-f235-5bed-89ac-aa5cdf22acc7
+
+	measure 'Calls Overflowed' = SUM('Fact Telephony'[Overflow Out Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: f68274dd-b0dd-5f40-87af-818026d93c7b
+
+	measure 'Calls Routed Non Agent' = SUM('Fact Telephony'[Calls Routed Non Agent Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: a7e7241d-55f1-5f86-9796-4f7fa05440e3
+
+	measure 'Short Calls' = SUM('Fact Telephony'[Short Calls Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: f32413bd-26ec-5c3b-99f5-30f54654aaa4
+
+	measure 'Service Level Calls' = SUM('Fact Telephony'[Service Level Calls Raw])
+		formatString: #,##0
+		displayFolder: 01 Volume
+		lineageTag: d70440bf-b98c-50ae-88e0-6b8d68306250
+
+	measure 'Answer Rate %' = DIVIDE([Calls Answered], [Calls Offered])
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: c61ecbac-2ed3-5e0f-8bb1-67345d38cad7
+
+	measure 'Abandonment Rate %' = DIVIDE([Calls Abandoned], [Calls Offered])
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: d1c84959-f4cc-5324-ac4d-bf6875353802
+
+	measure 'Standards of Service %' = DIVIDE([Service Level Calls], [Service Level Calls Offered])
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: 4fef85cc-8572-55e5-a59c-c4094ffb693c
+
+	measure 'Emergency Standards of Service %' =
+			CALCULATE(
+			    [Standards of Service %],
+			    KEEPFILTERS('Dim Emergency Classification'[Emergency Classification] = "Emergency")
+			)
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: f7d247dd-a610-530a-9f52-6d927301d6bf
+
+	measure 'Emergency Answer Rate %' =
+			CALCULATE(
+			    [Answer Rate %],
+			    KEEPFILTERS('Dim Emergency Classification'[Emergency Classification] = "Emergency")
+			)
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: cad6b89a-03c6-50b6-9095-75c54b380788
+
+	measure 'Emergency Abandonment Rate %' =
+			CALCULATE(
+			    [Abandonment Rate %],
+			    KEEPFILTERS('Dim Emergency Classification'[Emergency Classification] = "Emergency")
+			)
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: aea0b70c-3cdc-5bae-b32c-eaccbe9cc745
+
+	measure 'Service Level Target %' = 0.90
+		formatString: 0.0%
+		displayFolder: 02 Rates
+		lineageTag: 800e6964-2b82-5773-9299-3a9f1e93b8fb
+
+	measure 'Standards of Service Variance to Target' = [Standards of Service %] - [Service Level Target %]
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 02 Rates
+		lineageTag: 4d11d8fe-0319-579b-9f72-7a5db4d381a4
+
+	measure 'Below Service Target Flag' = IF(NOT ISBLANK([Standards of Service %]) && [Standards of Service %] < [Service Level Target %], 1, 0)
+		formatString: 0
+		displayFolder: 02 Rates
+		lineageTag: 12442219-ffab-559d-8944-7cdd8b7cf66c
+
+	measure 'Total Wait Time Seconds' = SUM('Fact Telephony'[Wait Time Seconds Raw])
+		formatString: #,##0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: 7e98e487-22a7-5c6d-bc41-e4984df6ba33
+
+	measure 'Total Answer Wait Time Seconds' = SUM('Fact Telephony'[Answer Wait Time Seconds Raw])
+		formatString: #,##0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: f5013b33-1939-5f15-9096-1a8b223c3809
+
+	measure 'Average Speed To Answer' = DIVIDE([Total Answer Wait Time Seconds], [Calls Answered])
+		formatString: #,##0.0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: 35f2ca37-b492-57e1-a5ef-7dcc1cb126e3
+
+	measure 'Average Wait Time' = DIVIDE([Total Wait Time Seconds], [Calls Offered])
+		formatString: #,##0.0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: 4759fd1d-5687-5c99-94d3-e04a0d174ff1
+
+	measure 'Longest Wait Time' = MAX('Fact Telephony'[Max Wait Time Seconds Raw])
+		formatString: #,##0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: 56072d01-7f3c-507a-ad65-7edee795d54a
+
+	measure 'Total Handling Time Seconds' = SUM('Fact Telephony'[Handle Time Seconds Raw])
+		formatString: #,##0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: d8fcb920-f54b-519c-934c-2e22082a54d5
+
+	measure 'Average Handling Time' = DIVIDE([Total Handling Time Seconds], [Calls Answered])
+		formatString: #,##0.0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: 408f8603-0c83-550f-a7ca-dc0261e02c1b
+
+	measure 'Average Talk Time' = [Average Handling Time]
+		formatString: #,##0.0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: a194c5b4-7005-539b-a2f7-7ce37d31d971
+
+	measure 'Total Talk Time' = [Total Handling Time Seconds]
+		formatString: #,##0
+		displayFolder: 03 Wait and Handle Time
+		lineageTag: d969fda2-f71b-5045-a7c8-675e9ffe4082
+
+	measure 'Average Hold Time' = BLANK()
+		formatString: #,##0.0
+		displayFolder: 09 Unavailable Source Fields
+		lineageTag: 1d8fc19d-63c6-5d66-9cf9-c2ce02eb3edc
+
+	measure 'After-Call Work Time' = BLANK()
+		formatString: #,##0
+		displayFolder: 09 Unavailable Source Fields
+		lineageTag: 093ee6fe-7089-5a49-8185-d6d28df0154d
+
+	measure 'Calls Below Service Threshold' = [Service Level Calls]
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: 69522780-a421-5231-9a3b-944f139e4798
+
+	measure 'Calls Above Service Threshold' = MAX(0, [Service Level Calls Offered] - [Service Level Calls])
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: 3a449fd7-090a-58f3-b5c5-e67848518eb5
+
+	measure 'Answered Within Target' = [Service Level Calls]
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: 47c3e9eb-8a2b-5b7a-894b-f245263bc1e8
+
+	measure 'Answered After Target' = MAX(0, [Calls Answered] - [Service Level Calls])
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: b9c5d5a8-546b-5861-b825-a40ecfee1be0
+
+	measure 'Abandoned Within Target' = [Calls Abandoned Within Service Threshold]
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: 59bcec09-f9a7-5495-b68b-1836e167a690
+
+	measure 'Abandoned After Target' = [Calls Abandoned After Service Threshold]
+		formatString: #,##0
+		displayFolder: 04 Threshold Bands
+		lineageTag: 2f301652-2947-53c1-bc63-1799e5f31bf3
+
+	measure 'Active Days' = DISTINCTCOUNT('Fact Telephony'[Date Key])
+		formatString: #,##0
+		displayFolder: 05 Productivity
+		lineageTag: 711f4d44-3425-5e0f-b603-3dfa4d20c703
+
+	measure 'Active Working Days' =
+			CALCULATE(
+			    DISTINCTCOUNT('Fact Telephony'[Date Key]),
+			    KEEPFILTERS('Dim Date'[Is Working Day] = TRUE())
+			)
+		formatString: #,##0
+		displayFolder: 05 Productivity
+		lineageTag: 51090f38-8c23-5659-91e4-aa6b504bf3a2
+
+	measure 'Calls Offered Per Working Day' = DIVIDE([Calls Offered], [Active Working Days])
+		formatString: #,##0.0
+		displayFolder: 05 Productivity
+		lineageTag: f4cece58-ba4d-5d40-8ad2-1f013f8a5bfb
+
+	measure 'Calls Answered Per Working Day' = DIVIDE([Calls Answered], [Active Working Days])
+		formatString: #,##0.0
+		displayFolder: 05 Productivity
+		lineageTag: 6838ec3f-6ebb-5a96-8b09-d24d0f45506a
+
+	measure 'Average Calls Per Working Day' = [Calls Offered Per Working Day]
+		formatString: #,##0.0
+		displayFolder: 05 Productivity
+		lineageTag: 0f6d036b-a20b-5236-9470-9dc329a2837a
+
+	measure 'Calls Answered Per Agent' = BLANK()
+		formatString: #,##0.0
+		displayFolder: 09 Unavailable Source Fields
+		lineageTag: 0f7ea5d3-44a5-5154-8986-6f118d1b4ddc
+
+	measure 'Total Call Time' = [Total Handling Time Seconds]
+		formatString: #,##0
+		displayFolder: 05 Productivity
+		lineageTag: 2fa8b9c9-1db2-501c-86a6-aca50f1ce3ec
+
+	measure 'Transfer Rate %' = BLANK()
+		formatString: 0.0%
+		displayFolder: 09 Unavailable Source Fields
+		lineageTag: 65ffae26-4266-5b85-92c4-5829c0e8428b
+
+	measure 'Latest Data Date' = CALCULATE(MAX('Dim Date'[Date]), REMOVEFILTERS('Dim Date'))
+		formatString: Long Date
+		displayFolder: 06 Latest Snapshot
+		lineageTag: 177b5626-6e49-5d50-841d-176e7b72fc79
+
+	measure 'Latest Month Label' = FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), "mmmm yyyy")
+		displayFolder: 06 Latest Snapshot
+		lineageTag: feac27c7-de15-5672-89ef-5198c2c17ab7
+
+	measure 'Latest Month Calls Offered' =
+			VAR LatestMonth = CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date'))
+			RETURN
+			    CALCULATE([Calls Offered], REMOVEFILTERS('Dim Date'), 'Dim Date'[Month Start] = LatestMonth)
+		formatString: #,##0
+		displayFolder: 06 Latest Snapshot
+		lineageTag: 994b2e86-6164-558b-a8c1-822bf95e6843
+
+	measure 'Previous Month Calls Offered' =
+			VAR LatestMonth = CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date'))
+			RETURN
+			    CALCULATE([Calls Offered], REMOVEFILTERS('Dim Date'), 'Dim Date'[Month Start] = EDATE(LatestMonth, -1))
+		formatString: #,##0
+		displayFolder: 06 Latest Snapshot
+		lineageTag: c3acce64-ddda-5045-a121-0fa8ed2f97d5
+
+	measure 'Calls Offered MoM Change %' = DIVIDE([Latest Month Calls Offered] - [Previous Month Calls Offered], [Previous Month Calls Offered])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 06 Latest Snapshot
+		lineageTag: 44eab2fe-fbdb-5ed3-b035-ede807f440e4
+
+	measure 'Latest Month Standards of Service %' =
+			VAR LatestMonth = CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date'))
+			RETURN
+			    CALCULATE([Standards of Service %], REMOVEFILTERS('Dim Date'), 'Dim Date'[Month Start] = LatestMonth)
+		formatString: 0.0%
+		displayFolder: 06 Latest Snapshot
+		lineageTag: ae1ea980-72b9-5ae3-ad8a-e9118e7270df
+
+	measure 'Previous Month Standards of Service %' =
+			VAR LatestMonth = CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date'))
+			RETURN
+			    CALCULATE([Standards of Service %], REMOVEFILTERS('Dim Date'), 'Dim Date'[Month Start] = EDATE(LatestMonth, -1))
+		formatString: 0.0%
+		displayFolder: 06 Latest Snapshot
+		lineageTag: a35d79f9-7b4d-5b98-b55d-c109b10a0bd2
+
+	measure 'Standards of Service MoM Change' = [Latest Month Standards of Service %] - [Previous Month Standards of Service %]
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 06 Latest Snapshot
+		lineageTag: 729bb819-1510-565b-88b7-fd5cd237a281
+
+	measure 'Service Status' =
+			SWITCH(
+			    TRUE(),
+			    ISBLANK([Standards of Service %]), BLANK(),
+			    [Standards of Service %] >= [Service Level Target %], "On target",
+			    "Below target"
+			)
+		displayFolder: 07 Narrative
+		lineageTag: f622ccf6-fd00-5b99-81fa-a2bcd04de6e9
+
+	measure 'Highest Abandonment Queue' =
+			VAR Candidates =
+			    ADDCOLUMNS(
+			        ALL('Dim Queue'[Queue]),
+			        "__Abandoned", [Calls Abandoned]
+			    )
+			VAR Ranked =
+			    TOPN(1, Candidates, [__Abandoned], DESC, 'Dim Queue'[Queue], ASC)
+			RETURN
+			    MAXX(Ranked, 'Dim Queue'[Queue])
+		displayFolder: 07 Narrative
+		lineageTag: 2ecde8e1-a21a-5100-bfc2-492ffd22b2a2
+
+	measure 'Highest Pressure Hour' =
+			VAR Candidates =
+			    ADDCOLUMNS(
+			        ALL('Dim Time Slot'[Hour Label]),
+			        "__Offered", [Calls Offered]
+			    )
+			VAR Ranked =
+			    TOPN(1, Candidates, [__Offered], DESC, 'Dim Time Slot'[Hour Label], ASC)
+			RETURN
+			    MAXX(Ranked, 'Dim Time Slot'[Hour Label])
+		displayFolder: 07 Narrative
+		lineageTag: 4542829d-ed5e-5836-b1ad-715d4687ec30
+
+	measure 'Headline Narrative' =
+			VAR StatusText = [Service Status]
+			VAR LatestMonth = [Latest Month Label]
+			VAR Sos = [Latest Month Standards of Service %]
+			VAR QueueName = [Highest Abandonment Queue]
+			VAR PeakHour = [Highest Pressure Hour]
+			RETURN
+			    IF(
+			        ISBLANK(Sos),
+			        BLANK(),
+			        "As of " & LatestMonth & ", Standards of Service is " & FORMAT(Sos, "0.0%") & " and currently " & LOWER(StatusText) & ". The highest abandonment queue is " & COALESCE(QueueName, "not available") & ", with demand peaking around " & COALESCE(PeakHour, "not available") & "."
+			    )
+		displayFolder: 07 Narrative
+		lineageTag: 7dac93bf-9d90-59db-803e-b6805924aa3a
+
+	column 'Telephony Record Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 04fd0494-61bc-5f15-81f2-0bbab9491773
+		summarizeBy: none
+		sourceColumn: TelephonyRecordKey
+
+	column 'Date Key'
+		dataType: int64
+		isHidden
+		lineageTag: cf873ae1-fbf2-5171-860b-8f27e387dfeb
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column 'Time Slot Key'
+		dataType: int64
+		isHidden
+		lineageTag: 4c59cc63-989b-5d14-a2a0-6ac058e8b3ee
+		summarizeBy: none
+		sourceColumn: TimeSlotKey
+
+	column 'Call Type Key'
+		dataType: int64
+		isHidden
+		lineageTag: a66c4179-5cb7-5dff-8036-caa9a0da02a4
+		summarizeBy: none
+		sourceColumn: CallTypeKey
+
+	column 'Team Key'
+		dataType: int64
+		isHidden
+		lineageTag: 02abc7d1-8116-51a3-82e5-15725ff8ad03
+		summarizeBy: none
+		sourceColumn: TeamKey
+
+	column 'Call Group Key'
+		dataType: int64
+		isHidden
+		lineageTag: e2ec55e8-2102-5cca-a5c9-b3429a1dacd1
+		summarizeBy: none
+		sourceColumn: CallGroupKey
+
+	column 'Queue Key'
+		dataType: int64
+		isHidden
+		lineageTag: 661fbe0b-503d-5a35-a236-ed1cd5057051
+		summarizeBy: none
+		sourceColumn: QueueKey
+
+	column 'Function Key'
+		dataType: int64
+		isHidden
+		lineageTag: b435c449-acac-5552-93c7-ef55b5bae553
+		summarizeBy: none
+		sourceColumn: FunctionKey
+
+	column 'Emergency Class Key'
+		dataType: int64
+		isHidden
+		lineageTag: 1aa84393-fd2a-51ec-8641-a8cd42598b8c
+		summarizeBy: none
+		sourceColumn: EmergencyClassKey
+
+	column 'Working Hours Key'
+		dataType: int64
+		isHidden
+		lineageTag: 6a8f30f7-9fb9-5e34-bca4-1073d21ddcd2
+		summarizeBy: none
+		sourceColumn: WorkingHoursKey
+
+	column 'Calls Offered Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 0a024191-0e40-561d-8596-bb7491d9b904
+		summarizeBy: sum
+		sourceColumn: CallsOffered
+
+	column 'Calls Answered Raw'
+		dataType: int64
+		isHidden
+		lineageTag: cf34e2dc-87ac-5d1e-852b-4cccaff2cde5
+		summarizeBy: sum
+		sourceColumn: CallsAnswered
+
+	column 'Calls Abandoned After Threshold Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 8bfe3432-d8bd-5c78-8494-1e0b71e1474e
+		summarizeBy: sum
+		sourceColumn: CallsAbandonedAfterThreshold
+
+	column 'Calls Abandoned Within Threshold Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 34c80cda-d7e6-5c83-907a-92df12a0e7e5
+		summarizeBy: sum
+		sourceColumn: CallsAbandonedWithinThreshold
+
+	column 'RONA Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 0fa9290c-f3aa-5e71-982a-a0ae3564c5c8
+		summarizeBy: sum
+		sourceColumn: RONA
+
+	column 'Overflow Out Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 1e82f98c-ebcb-538a-bab1-8b88869a8cb5
+		summarizeBy: sum
+		sourceColumn: OverflowOut
+
+	column 'Calls Routed Non Agent Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 265d983a-a122-5f0f-b0f5-cb640c72d164
+		summarizeBy: sum
+		sourceColumn: CallsRoutedNonAgent
+
+	column 'Short Calls Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 985dcfeb-3229-5c94-8ffc-30de7a0fa473
+		summarizeBy: sum
+		sourceColumn: ShortCalls
+
+	column 'Service Level Calls Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 6c7b0e9e-8861-5a5e-ae63-f7b8fbafc9a8
+		summarizeBy: sum
+		sourceColumn: ServiceLevelCalls
+
+	column 'Service Level Calls Offered Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 1f48b743-391c-594d-af06-7506ce0de350
+		summarizeBy: sum
+		sourceColumn: ServiceLevelCallsOffered
+
+	column 'Wait Time Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 114b8187-49a0-55bf-b095-851c0e8b0e76
+		summarizeBy: sum
+		sourceColumn: WaitTimeSeconds
+
+	column 'Answer Wait Time Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 4f918ca8-5ef2-53b7-97e9-f07a2c1d8ff2
+		summarizeBy: sum
+		sourceColumn: AnswerWaitTimeSeconds
+
+	column 'Handle Time Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 1405e1e9-89bf-5625-82b1-c3bcd757ce4c
+		summarizeBy: sum
+		sourceColumn: HandleTimeSeconds
+
+	column 'Max Wait Time Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: f3a57a0b-0c1e-51c9-be2f-699f11cde7b6
+		summarizeBy: max
+		sourceColumn: MaxWaitTimeSeconds
+
+	column 'Source Avg Speed To Answer Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: 90fa4df8-9eb8-5749-8c19-256cad1440b1
+		summarizeBy: none
+		sourceColumn: SourceAvgSpeedToAnswerSeconds
+
+	column 'Source Avg Handle Time Seconds Raw'
+		dataType: int64
+		isHidden
+		lineageTag: e08bf2eb-2b38-5717-806c-212839b26143
+		summarizeBy: none
+		sourceColumn: SourceAvgHandleTimeSeconds
+
+	column 'Source Service Level % Raw'
+		dataType: double
+		isHidden
+		lineageTag: 631514b2-e5e6-5194-9cb2-97bb53bde1e3
+		summarizeBy: none
+		sourceColumn: SourceServiceLevelPct
+
+	partition 'Fact Telephony' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\fact_telephony.csv"), [Delimiter=",", Columns=27, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"TelephonyRecordKey", Int64.Type},
+							{"DateKey", Int64.Type},
+							{"TimeSlotKey", Int64.Type},
+							{"CallTypeKey", Int64.Type},
+							{"TeamKey", Int64.Type},
+							{"CallGroupKey", Int64.Type},
+							{"QueueKey", Int64.Type},
+							{"FunctionKey", Int64.Type},
+							{"EmergencyClassKey", Int64.Type},
+							{"WorkingHoursKey", Int64.Type},
+							{"CallsOffered", Int64.Type},
+							{"CallsAnswered", Int64.Type},
+							{"CallsAbandonedAfterThreshold", Int64.Type},
+							{"CallsAbandonedWithinThreshold", Int64.Type},
+							{"RONA", Int64.Type},
+							{"OverflowOut", Int64.Type},
+							{"CallsRoutedNonAgent", Int64.Type},
+							{"ShortCalls", Int64.Type},
+							{"ServiceLevelCalls", Int64.Type},
+							{"ServiceLevelCallsOffered", Int64.Type},
+							{"WaitTimeSeconds", Int64.Type},
+							{"AnswerWaitTimeSeconds", Int64.Type},
+							{"HandleTimeSeconds", Int64.Type},
+							{"MaxWaitTimeSeconds", Int64.Type},
+							{"SourceAvgSpeedToAnswerSeconds", Int64.Type},
+							{"SourceAvgHandleTimeSeconds", Int64.Type},
+							{"SourceServiceLevelPct", type number}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

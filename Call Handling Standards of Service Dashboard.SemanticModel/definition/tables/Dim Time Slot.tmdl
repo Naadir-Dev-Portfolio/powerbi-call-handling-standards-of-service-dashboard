@@ -1,0 +1,74 @@
+table 'Dim Time Slot'
+	lineageTag: f4a3d1ca-66ef-5cee-ad3a-9641b4cc2514
+
+	column 'Time Slot Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 3ac9015b-77a3-5259-9624-9be93b307daa
+		summarizeBy: none
+		sourceColumn: TimeSlotKey
+
+	column 'Half Hour'
+		dataType: string
+		lineageTag: fa8e4282-ba05-5762-8b2b-87a3aeb9ac08
+		summarizeBy: none
+		sourceColumn: HalfHour
+		sortByColumn: 'Time Slot Sort'
+
+	column Hour
+		dataType: int64
+		isHidden
+		lineageTag: 7305d4d2-8a35-5f95-899c-88986c885ac7
+		summarizeBy: none
+		sourceColumn: Hour
+
+	column 'Hour Label'
+		dataType: string
+		lineageTag: 9d4fa20b-9fc2-5adb-86e6-e9954848776c
+		summarizeBy: none
+		sourceColumn: HourLabel
+		sortByColumn: Hour
+
+	column Minute
+		dataType: int64
+		isHidden
+		lineageTag: 12571123-3734-5ec7-bff5-553a4aba6b7b
+		summarizeBy: none
+		sourceColumn: Minute
+
+	column 'Time Band'
+		dataType: string
+		lineageTag: a96eb3bb-dba4-5c93-bcc4-2f7a653383bc
+		summarizeBy: none
+		sourceColumn: TimeBand
+
+	column 'Time Slot Sort'
+		dataType: int64
+		isHidden
+		lineageTag: bd8fa147-a49c-530c-ac84-16882e7a5d00
+		summarizeBy: none
+		sourceColumn: TimeSlotSort
+
+	partition 'Dim Time Slot' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_time_slot.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"TimeSlotKey", Int64.Type},
+							{"HalfHour", type text},
+							{"Hour", Int64.Type},
+							{"HourLabel", type text},
+							{"Minute", Int64.Type},
+							{"TimeBand", type text},
+							{"TimeSlotSort", Int64.Type}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

@@ -1,0 +1,50 @@
+Max Wait Time,Avg Speed To Answer,Answer Wait Time,Avg Handle Time,Service Level,NG Calls Abandoned,Abandoned Within Service Level,RONA,Overflow Out,Calls Routed Non Agent,Short Calls,Service Level Calls,Calls Handled,Service Level Calls Offered,Call Type,Half Hour,Date,Source,Calls Offered,WaitTime,HandleTime,In Hours
+,,,,,,0,,,,,0,0,455,Emergency Triage,23:59:00,,BCM Calls,455,,,0
+,,,,,,292,,,,,2007,2007,4089,Emergency Triage,23:59:00,,BCM Calls,3797,,,0
+,,,,,,2,,,,,101,101,123,Emergency Triage,23:59:00,,BCM Calls,121,,,0
+,,,,,,0,,,,,0,8,8,Emergency Triage,23:59:00,,BCM Calls,8,,,0
+,,,,,,0,,,,,0,0,1,Emergency Triage,23:59:00,,BCM Calls,1,,,0
+,,,,,,0,,,,,0,0,1251,Emergency Triage,23:59:00,,BCM Calls,1251,,,0
+,,,,,,0,,,,,0,0,1147,Emergency Triage,00:00:00,,BCM Calls,1147,,,0
+,,,,,,0,,,,,26,28,28,Asset Protection,23:59:00,,BCM Calls,28,,,0
+,,,,,,0,,,,,21,21,21,Asset Protection,23:59:00,,BCM Calls,21,,,0
+,,,,,,0,,,,,27,32,33,Asset Protection,23:59:00,,BCM Calls,33,,,0
+,,,,,,1,,,,,31,35,36,Asset Protection,23:59:00,,BCM Calls,35,,,0
+,,,,,,1,,,,,19,19,20,Asset Protection,23:59:00,,BCM Calls,19,,,0
+,,,,,,0,,,,,20,20,20,Asset Protection,23:59:00,,BCM Calls,20,,,0
+,,,,,,0,,,,,25,25,25,Asset Protection,23:59:00,,BCM Calls,25,,,0
+,,,,,,0,,,,,23,23,23,Asset Protection,23:59:00,,BCM Calls,23,,,0
+,,,,,,0,,,,,25,25,25,Asset Protection,23:59:00,,BCM Calls,25,,,0
+,,,,,,0,,,,,12,12,12,Asset Protection,23:59:00,,BCM Calls,12,,,0
+,,,,,,2,,,,,8,10,12,Booking Support,23:59:00,,BCM Calls,10,,,0
+,,,,,,0,,,,,5,5,5,Booking Support,23:59:00,,BCM Calls,5,,,0
+,,,,,,0,,,,,5,5,5,Booking Support,23:59:00,,BCM Calls,5,,,0
+,,,,,,0,,,,,8,9,9,Booking Support,23:59:00,,BCM Calls,9,,,0
+,,,,,,0,,,,,5,6,6,Booking Support,23:59:00,,BCM Calls,6,,,0
+,,,,,,0,,,,,8,8,8,Booking Support,23:59:00,,BCM Calls,8,,,0
+,,,,,,2,,,,,5,8,10,Booking Support,23:59:00,,BCM Calls,8,,,0
+,,,,,,1,,,,,9,10,11,Booking Support,23:59:00,,BCM Calls,10,,,0
+,,,,,,0,,,,,4,5,5,Booking Support,23:59:00,,BCM Calls,5,,,0
+,,,,,,1,,,,,12,12,13,Booking Support,23:59:00,,BCM Calls,12,,,0
+,,,,,,0,,,,,3,3,3,Regional Emergency,23:59:00,,BCM Calls,3,,,0
+,,,,,,0,,,,,2,2,2,Regional Engineer,23:59:00,,BCM Calls,2,,,0
+,,,,,,8,,,,,78,83,91,Regional Emergency,23:59:00,,BCM Calls,83,,,0
+,,,,,,2,,,,,46,48,50,Regional Engineer,23:59:00,,BCM Calls,48,,,0
+,,,,,,8,,,,,97,113,128,Regional Emergency,23:59:00,,BCM Calls,120,,,0
+,,,,,,7,,,,,37,40,48,Regional Engineer,23:59:00,,BCM Calls,41,,,0
+,,,,,,2,,,,,62,65,67,Regional Emergency,23:59:00,,BCM Calls,65,,,0
+,,,,,,1,,,,,26,28,29,Regional Engineer,23:59:00,,BCM Calls,28,,,0
+,,,,,,4,,,,,75,87,91,Regional Emergency,23:59:00,,BCM Calls,87,,,0
+,,,,,,1,,,,,35,38,40,Regional Engineer,23:59:00,,BCM Calls,39,,,0
+,,,,,,6,,,,,66,73,82,Regional Emergency,23:59:00,,BCM Calls,76,,,0
+,,,,,,2,,,,,18,19,24,Regional Engineer,23:59:00,,BCM Calls,22,,,0
+,,,,,,0,,,,,24,24,24,Priority Emergency Routing,23:59:00,,BCM Calls,24,,,0
+,,,,,,112,,,,,3026,3274,3399,Emergency Routing,23:59:00,,BCM Calls,3287,,,0
+,,,,,,0,,,,,21,27,26,Priority Emergency Routing,23:59:00,,BCM Calls,26,,,0
+,,,,,,153,,,,,2983,3529,3754,Emergency Routing,23:59:00,,BCM Calls,3601,,,0
+,,,,,,0,,,,,25,32,32,Priority Emergency Routing,23:59:00,,BCM Calls,32,,,0
+,,,,,,61,,,,,2063,2251,2359,Emergency Routing,23:59:00,,BCM Calls,2298,,,0
+,,,,,,2,,,,,12,15,20,Partner Service 01,23:59:00,,BCM Calls,18,,,0
+,,,,,,0,,,,,3,17,25,Partner Service 01,23:59:00,,BCM Calls,25,,,0
+,,,,,,1,,,,,50,64,79,Partner Service 01,23:59:00,,BCM Calls,78,,,0
+,,,,,,0,,,,,33,38,36,Emergency Triage,23:59:00,,BCM Calls,36,,,0

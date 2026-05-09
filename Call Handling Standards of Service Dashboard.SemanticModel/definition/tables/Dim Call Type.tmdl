@@ -1,0 +1,108 @@
+table 'Dim Call Type'
+	lineageTag: b5568774-049a-55f0-a72f-83a11267ac57
+
+	column 'Call Type Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 66805188-5540-5a07-bbd5-d3bc5203a8f2
+		summarizeBy: none
+		sourceColumn: CallTypeKey
+
+	column 'Call Type'
+		dataType: string
+		lineageTag: ad373b53-52d1-5b06-b6b0-00e2dbd5985a
+		summarizeBy: none
+		sourceColumn: Call Type
+
+	column Queue
+		dataType: string
+		lineageTag: adf8ebe7-1615-520a-84f9-7056cc84db74
+		summarizeBy: none
+		sourceColumn: Queue
+
+	column 'Team Key'
+		dataType: int64
+		isHidden
+		lineageTag: 258ca045-4229-500d-b383-1d04b75e4015
+		summarizeBy: none
+		sourceColumn: TeamKey
+
+	column Team
+		dataType: string
+		lineageTag: d2e51397-6ee0-5d8a-8b4f-e3bedea187f4
+		summarizeBy: none
+		sourceColumn: Team
+
+	column 'Call Group Key'
+		dataType: int64
+		isHidden
+		lineageTag: 21812a99-a0a8-594f-aab2-cc2c5c26e0bf
+		summarizeBy: none
+		sourceColumn: CallGroupKey
+
+	column 'Call Group'
+		dataType: string
+		lineageTag: 34cf0ab4-bb4a-59d8-bca4-ee870be276c9
+		summarizeBy: none
+		sourceColumn: Call Group
+
+	column 'Function Key'
+		dataType: int64
+		isHidden
+		lineageTag: 7db8018b-dbb9-52f0-a285-79af489bb7f4
+		summarizeBy: none
+		sourceColumn: FunctionKey
+
+	column Function
+		dataType: string
+		lineageTag: 70bd43fa-4e61-5d3e-9d29-75b0686b30fd
+		summarizeBy: none
+		sourceColumn: Function
+
+	column 'Emergency Class Key'
+		dataType: int64
+		isHidden
+		lineageTag: af2016ca-9bf1-5b26-a43c-9447c61e24b6
+		summarizeBy: none
+		sourceColumn: EmergencyClassKey
+
+	column 'Emergency Classification'
+		dataType: string
+		lineageTag: 195f988b-c3f2-51e0-a4bf-122be4c7be76
+		summarizeBy: none
+		sourceColumn: Emergency Classification
+
+	column 'Is Emergency'
+		dataType: boolean
+		lineageTag: c50aee43-b531-505e-9ef0-5aee899d7408
+		summarizeBy: none
+		sourceColumn: IsEmergency
+
+	partition 'Dim Call Type' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_call_type.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"CallTypeKey", Int64.Type},
+							{"Call Type", type text},
+							{"Queue", type text},
+							{"TeamKey", Int64.Type},
+							{"Team", type text},
+							{"CallGroupKey", Int64.Type},
+							{"Call Group", type text},
+							{"FunctionKey", Int64.Type},
+							{"Function", type text},
+							{"EmergencyClassKey", Int64.Type},
+							{"Emergency Classification", type text},
+							{"IsEmergency", type logical}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

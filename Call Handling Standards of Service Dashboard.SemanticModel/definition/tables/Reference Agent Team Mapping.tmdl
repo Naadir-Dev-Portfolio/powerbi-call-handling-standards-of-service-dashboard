@@ -1,0 +1,33 @@
+table 'Reference Agent Team Mapping'
+	isHidden
+	lineageTag: 8dbb7d53-3afb-565e-9a90-ebb73cb0dfdc
+
+	column 'Agent Team Source'
+		dataType: string
+		lineageTag: aff4241b-3554-5e51-a19b-85566efa240a
+		summarizeBy: none
+		sourceColumn: AgentTeamSource
+
+	column 'Mapped Team'
+		dataType: string
+		lineageTag: 6ef17a41-9f4f-58c8-99f7-89da720d937b
+		summarizeBy: none
+		sourceColumn: MappedTeam
+
+	partition 'Reference Agent Team Mapping' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\reference_agent_team_mapping.csv"), [Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"AgentTeamSource", type text},
+							{"MappedTeam", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

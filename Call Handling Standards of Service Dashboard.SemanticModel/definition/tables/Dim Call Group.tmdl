@@ -1,0 +1,34 @@
+table 'Dim Call Group'
+	lineageTag: 3f77685b-b1d4-511e-b858-ba66e5ae6f0e
+
+	column 'Call Group Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: c5ea91f0-3616-5fd7-a0ed-e2ffb10f787d
+		summarizeBy: none
+		sourceColumn: CallGroupKey
+
+	column 'Call Group'
+		dataType: string
+		lineageTag: f2650ca0-2ef0-5775-afd8-405cfb45cdc8
+		summarizeBy: none
+		sourceColumn: Call Group
+
+	partition 'Dim Call Group' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_call_group.csv"), [Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"CallGroupKey", Int64.Type},
+							{"Call Group", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

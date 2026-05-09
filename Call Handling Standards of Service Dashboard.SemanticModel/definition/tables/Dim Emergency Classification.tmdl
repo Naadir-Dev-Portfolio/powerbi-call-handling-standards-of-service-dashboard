@@ -1,0 +1,41 @@
+table 'Dim Emergency Classification'
+	lineageTag: 70172b84-b9fd-590c-a5cb-5b3e914beeb3
+
+	column 'Emergency Class Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 590e4ef3-000e-57bc-ad75-093149eacc90
+		summarizeBy: none
+		sourceColumn: EmergencyClassKey
+
+	column 'Emergency Classification'
+		dataType: string
+		lineageTag: 3bd11c77-1c3c-51e6-9414-4024da4f01ea
+		summarizeBy: none
+		sourceColumn: Emergency Classification
+
+	column 'Is Emergency'
+		dataType: boolean
+		lineageTag: b37cbdeb-4814-5c9e-871e-2af33d87b035
+		summarizeBy: none
+		sourceColumn: IsEmergency
+
+	partition 'Dim Emergency Classification' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_emergency_classification.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"EmergencyClassKey", Int64.Type},
+							{"Emergency Classification", type text},
+							{"IsEmergency", type logical}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

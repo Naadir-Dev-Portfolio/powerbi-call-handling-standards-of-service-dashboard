@@ -1,0 +1,8 @@
+NoteKey,Area,Note
+1,Source Grain,"The main extract is aggregated by date, half-hour and call type; it is not individual call-level data."
+2,Excluded Rows,49 source rows have no call date and Source = BCM Calls; they are excluded from the star-schema fact so the Calendar relationship remains valid.
+3,Queue,"No separate queue column exists; Queue is modelled from Call Type, which is the closest available service-line routing field."
+4,Agent,"The fact extract does not include agent, extension, logged-in time or agent team keys. The supplied agent team mapping is retained as an unconnected reference table."
+5,Unavailable KPIs,"Transferred calls, hold time, after-call work, repeat calls and logged-in time are not present in the source extract; placeholder measures return blank."
+6,Durations,Duration fields are treated as seconds. HandleTime is used for handling time and as the closest available talk-time proxy.
+7,Target,The service-level target measure is set to 90 percent as a configurable reporting assumption because no target table is provided.

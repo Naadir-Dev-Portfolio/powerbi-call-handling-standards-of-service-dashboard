@@ -1,0 +1,3 @@
+WorkingHoursKey,Working Hours,IsInHours
+0,Out of Hours,False
+1,In Hours,True

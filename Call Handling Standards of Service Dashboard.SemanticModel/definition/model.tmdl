@@ -1,0 +1,29 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["Fact Telephony","Dim Date","Dim Time Slot","Dim Call Type","Dim Team","Dim Call Group","Dim Queue","Dim Function","Dim Emergency Classification","Dim Working Hours","Model Notes","Reference Agent Team Mapping","ProjectRoot","CuratedDataFolder"]
+
+ref table 'Fact Telephony'
+ref table 'Dim Date'
+ref table 'Dim Time Slot'
+ref table 'Dim Call Type'
+ref table 'Dim Team'
+ref table 'Dim Call Group'
+ref table 'Dim Queue'
+ref table 'Dim Function'
+ref table 'Dim Emergency Classification'
+ref table 'Dim Working Hours'
+ref table 'Model Notes'
+ref table 'Reference Agent Team Mapping'
+
+ref cultureInfo en-GB
+

@@ -1,0 +1,41 @@
+table 'Model Notes'
+	lineageTag: 05e501b4-7dab-5d9f-823b-cd218a039193
+
+	column 'Note Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: ea15d28d-992e-538a-ac75-ef6d92f9f9f2
+		summarizeBy: none
+		sourceColumn: NoteKey
+
+	column Area
+		dataType: string
+		lineageTag: 7fce90a4-5b5c-5a29-b8a8-e763f10025c5
+		summarizeBy: none
+		sourceColumn: Area
+
+	column Note
+		dataType: string
+		lineageTag: a0fe899c-1980-5e32-832b-3d660a4c813b
+		summarizeBy: none
+		sourceColumn: Note
+
+	partition 'Model Notes' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\model_notes.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"NoteKey", Int64.Type},
+							{"Area", type text},
+							{"Note", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

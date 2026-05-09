@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+# Secrets
+*.key
+*.pem
+secrets.json
+config_local.py
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+# IDEs
+.vscode/
+.idea/
+*.swp
+# Logs
+*.log
+logs/
+**/.pbi/localSettings.json
+**/.pbi/cache.abf

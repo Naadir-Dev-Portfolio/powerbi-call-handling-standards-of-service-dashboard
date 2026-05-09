@@ -1,0 +1,31 @@
+QueueKey,Queue
+1,Assistance Line 01
+2,Assistance Line 02
+3,Emergency Triage
+4,Priority Emergency
+5,Partner Service 01
+6,Enquiries
+7,Enquiry Support
+8,Identity Check
+9,Support Lines
+10,Support
+11,Emergency
+12,Field Operations
+13,Engineer Support
+14,False Alarm
+15,Media Enquiry
+16,Partner Service 02
+17,Partner Service 03
+18,Out Of Hours Enquiry
+19,General Enquiry Other
+20,Regional Emergency
+21,Regional Engineer
+22,Asset Protection
+23,Asset Protection Partner Line
+24,Partner Service 04
+25,Incident Line 01
+26,Incident Line 02
+27,Incident Line 03
+28,Booking Support
+29,Priority Emergency Routing
+30,Emergency Routing

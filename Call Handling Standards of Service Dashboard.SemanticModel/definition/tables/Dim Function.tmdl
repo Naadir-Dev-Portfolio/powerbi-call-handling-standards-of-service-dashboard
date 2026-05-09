@@ -1,0 +1,34 @@
+table 'Dim Function'
+	lineageTag: c34c5319-8fc7-59f3-aea2-562b090edc8f
+
+	column 'Function Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: ea525ac8-f889-5db9-b21b-06a6a69b8275
+		summarizeBy: none
+		sourceColumn: FunctionKey
+
+	column Function
+		dataType: string
+		lineageTag: 3ab39296-b887-51b8-b605-384aa9d78d21
+		summarizeBy: none
+		sourceColumn: Function
+
+	partition 'Dim Function' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_function.csv"), [Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"FunctionKey", Int64.Type},
+							{"Function", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

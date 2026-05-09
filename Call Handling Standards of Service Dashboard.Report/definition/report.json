@@ -1,0 +1,111 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.2.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU04",
+      "reportVersionAtImport": {
+        "visual": "2.8.0",
+        "report": "3.2.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU04",
+          "path": "BaseThemes/CY26SU04.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Background-Texture85832061792826684.png",
+          "path": "Background-Texture85832061792826684.png",
+          "type": "Image"
+        },
+        {
+          "name": "data-analysis20458835189055868.png",
+          "path": "data-analysis20458835189055868.png",
+          "type": "Image"
+        },
+        {
+          "name": "efficiency22659538122903256.png",
+          "path": "efficiency22659538122903256.png",
+          "type": "Image"
+        },
+        {
+          "name": "grid2070700270102661.png",
+          "path": "grid2070700270102661.png",
+          "type": "Image"
+        },
+        {
+          "name": "group15493117526530809.png",
+          "path": "group15493117526530809.png",
+          "type": "Image"
+        },
+        {
+          "name": "home9024827341485859.png",
+          "path": "home9024827341485859.png",
+          "type": "Image"
+        },
+        {
+          "name": "information0026175831059931376.png",
+          "path": "information0026175831059931376.png",
+          "type": "Image"
+        },
+        {
+          "name": "logo9356618745838987.png",
+          "path": "logo9356618745838987.png",
+          "type": "Image"
+        },
+        {
+          "name": "powerbi_logo7843627364923983.png",
+          "path": "powerbi_logo7843627364923983.png",
+          "type": "Image"
+        },
+        {
+          "name": "telephone-handle-silhouette6787966189924435.png",
+          "path": "telephone-handle-silhouette6787966189924435.png",
+          "type": "Image"
+        },
+        {
+          "name": "telephone9435428618204373.png",
+          "path": "telephone9435428618204373.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

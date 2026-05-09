@@ -1,0 +1,34 @@
+table 'Dim Team'
+	lineageTag: cf3deb25-da05-572e-97a3-478d17a56124
+
+	column 'Team Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 6f771aaa-5f0a-5ca9-a502-340092366329
+		summarizeBy: none
+		sourceColumn: TeamKey
+
+	column Team
+		dataType: string
+		lineageTag: cbf6b1bc-59ec-5e7f-bb9e-840da937b686
+		summarizeBy: none
+		sourceColumn: Team
+
+	partition 'Dim Team' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_team.csv"), [Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"TeamKey", Int64.Type},
+							{"Team", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

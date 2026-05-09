@@ -1,0 +1,34 @@
+table 'Dim Queue'
+	lineageTag: 18c80631-f34e-5703-ac9f-5a8d7d2ab94d
+
+	column 'Queue Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 144a43bd-9a04-5b8c-9cbc-a9ad1dc45d14
+		summarizeBy: none
+		sourceColumn: QueueKey
+
+	column Queue
+		dataType: string
+		lineageTag: 44b6ea42-1fea-5284-8b47-c44617c63198
+		summarizeBy: none
+		sourceColumn: Queue
+
+	partition 'Dim Queue' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_queue.csv"), [Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"QueueKey", Int64.Type},
+							{"Queue", type text}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

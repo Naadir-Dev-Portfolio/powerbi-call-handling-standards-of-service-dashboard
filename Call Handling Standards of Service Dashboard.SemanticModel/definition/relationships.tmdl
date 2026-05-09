@@ -1,0 +1,36 @@
+relationship a1c4cb4e-863e-5a27-b971-d43b68aed3d6
+	fromColumn: 'Fact Telephony'.'Date Key'
+	toColumn: 'Dim Date'.'Date Key'
+
+relationship beeb139b-8dd2-5f6e-966c-b7d812b9053f
+	fromColumn: 'Fact Telephony'.'Time Slot Key'
+	toColumn: 'Dim Time Slot'.'Time Slot Key'
+
+relationship 33e16533-5844-5b95-92b9-022b19863fc3
+	fromColumn: 'Fact Telephony'.'Call Type Key'
+	toColumn: 'Dim Call Type'.'Call Type Key'
+
+relationship 478ad46f-72d2-580f-bacd-8511f8fde6e0
+	fromColumn: 'Fact Telephony'.'Team Key'
+	toColumn: 'Dim Team'.'Team Key'
+
+relationship 54fcdbcd-2000-5fec-ad1d-4294701ee1c6
+	fromColumn: 'Fact Telephony'.'Call Group Key'
+	toColumn: 'Dim Call Group'.'Call Group Key'
+
+relationship d6c62514-d351-5c79-8308-7d19693da323
+	fromColumn: 'Fact Telephony'.'Queue Key'
+	toColumn: 'Dim Queue'.'Queue Key'
+
+relationship 277f1412-dae4-52b3-bcc6-6cab40533791
+	fromColumn: 'Fact Telephony'.'Function Key'
+	toColumn: 'Dim Function'.'Function Key'
+
+relationship f925e21d-5bed-5e61-89ca-952920a0ea39
+	fromColumn: 'Fact Telephony'.'Emergency Class Key'
+	toColumn: 'Dim Emergency Classification'.'Emergency Class Key'
+
+relationship 96a534ce-949d-5dd8-918b-8d65eff49979
+	fromColumn: 'Fact Telephony'.'Working Hours Key'
+	toColumn: 'Dim Working Hours'.'Working Hours Key'
+

@@ -1,0 +1,178 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 529.91631150971682,
+            "y": 429.50440142174307
+          },
+          "nodeIndex": "Fact Telephony",
+          "nodeLineageTag": "0c6926fd-059c-5c61-b233-aacfbed46313",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 119.90079467799387,
+            "y": 360.2729074420597
+          },
+          "nodeIndex": "Dim Call Group",
+          "nodeLineageTag": "3f77685b-b1d4-511e-b858-ba66e5ae6f0e",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 865.98366274591194,
+            "y": 692.24693311570411
+          },
+          "nodeIndex": "Dim Call Type",
+          "nodeLineageTag": "b5568774-049a-55f0-a72f-83a11267ac57",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 816.61284027729016,
+            "y": 154.23265496259069
+          },
+          "nodeIndex": "Dim Date",
+          "nodeLineageTag": "b7b65d9b-1838-5ae2-a6b6-54a65106e06d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 369.82965344113285,
+            "y": 155.1819877486854
+          },
+          "nodeIndex": "Dim Emergency Classification",
+          "nodeLineageTag": "70172b84-b9fd-590c-a5cb-5b3e914beeb3",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 576.09505407466247,
+            "y": 940.52272549118129
+          },
+          "nodeIndex": "Dim Function",
+          "nodeLineageTag": "c34c5319-8fc7-59f3-aea2-562b090edc8f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 986.76099481727988,
+            "y": 508.75935416380952
+          },
+          "nodeIndex": "Dim Queue",
+          "nodeLineageTag": "18c80631-f34e-5703-ac9f-5a8d7d2ab94d",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 540.020576400248
+          },
+          "nodeIndex": "Dim Team",
+          "nodeLineageTag": "cf3deb25-da05-572e-97a3-478d17a56124",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 245.28592390964639,
+            "y": 722.95051526704356
+          },
+          "nodeIndex": "Dim Time Slot",
+          "nodeLineageTag": "f4a3d1ca-66ef-5cee-ad3a-9641b4cc2514",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 604.71683547977443,
+            "y": -50
+          },
+          "nodeIndex": "Dim Working Hours",
+          "nodeLineageTag": "157b1e7f-51fa-5c57-8938-e02aaad33a51",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1299.7609948172799,
+            "y": 320.26136274559065
+          },
+          "nodeIndex": "Model Notes",
+          "nodeLineageTag": "05e501b4-7dab-5d9f-823b-cd218a039193",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1504.7609948172799,
+            "y": 495.26136274559065
+          },
+          "nodeIndex": "Reference Agent Team Mapping",
+          "nodeLineageTag": "8dbb7d53-3afb-565e-9a90-ebb73cb0dfdc",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

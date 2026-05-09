@@ -1,0 +1,41 @@
+table 'Dim Working Hours'
+	lineageTag: 157b1e7f-51fa-5c57-8938-e02aaad33a51
+
+	column 'Working Hours Key'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 6af1c7bd-f7c2-5fab-a2bb-dc02531f382b
+		summarizeBy: none
+		sourceColumn: WorkingHoursKey
+
+	column 'Working Hours'
+		dataType: string
+		lineageTag: aafacf0e-961c-592a-abd9-ad1cadeb8411
+		summarizeBy: none
+		sourceColumn: Working Hours
+
+	column 'Is In Hours'
+		dataType: boolean
+		lineageTag: 264b0e1d-bb84-54e4-b69f-c5c91b20552a
+		summarizeBy: none
+		sourceColumn: IsInHours
+
+	partition 'Dim Working Hours' = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(CuratedDataFolder & "\dim_working_hours.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(
+						Headers,
+						{
+							{"WorkingHoursKey", Int64.Type},
+							{"Working Hours", type text},
+							{"IsInHours", type logical}
+						},
+						"en-GB"
+					)
+				in
+					Typed
+

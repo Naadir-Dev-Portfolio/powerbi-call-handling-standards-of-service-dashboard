@@ -1,0 +1,31 @@
+CallTypeKey,Call Type,Queue,TeamKey,Team,CallGroupKey,Call Group,FunctionKey,Function,EmergencyClassKey,Emergency Classification,IsEmergency
+1,Assistance Line 01,Assistance Line 01,2,Assistance,3,Core Operations,1,Contact Centre,2,Non-Emergency,False
+2,Assistance Line 02,Assistance Line 02,2,Assistance,3,Core Operations,1,Contact Centre,2,Non-Emergency,False
+3,Emergency Triage,Emergency Triage,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
+4,Priority Emergency,Priority Emergency,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
+5,Partner Service 01,Partner Service 01,8,Partner Services,5,Operations,2,Operations,2,Non-Emergency,False
+6,Enquiries,Enquiries,7,Out Of Hours Enquiry,3,Core Operations,1,Contact Centre,2,Non-Emergency,False
+7,Enquiry Support,Enquiry Support,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+8,Identity Check,Identity Check,5,Enquiries,4,Enquiries,1,Contact Centre,2,Non-Emergency,False
+9,Support Lines,Support Lines,12,Support Lines,10,Support Lines,1,Contact Centre,2,Non-Emergency,False
+10,Support,Support,11,Support,9,Support,1,Contact Centre,2,Non-Emergency,False
+11,Emergency,Emergency,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
+12,Field Operations,Field Operations,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+13,Engineer Support,Engineer Support,6,Other,6,Other,3,Unmapped,2,Non-Emergency,False
+14,False Alarm,False Alarm,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
+15,Media Enquiry,Media Enquiry,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+16,Partner Service 02,Partner Service 02,8,Partner Services,5,Operations,2,Operations,2,Non-Emergency,False
+17,Partner Service 03,Partner Service 03,8,Partner Services,5,Operations,2,Operations,2,Non-Emergency,False
+18,Out Of Hours Enquiry,Out Of Hours Enquiry,7,Out Of Hours Enquiry,3,Core Operations,1,Contact Centre,2,Non-Emergency,False
+19,General Enquiry Other,General Enquiry Other,5,Enquiries,4,Enquiries,1,Contact Centre,2,Non-Emergency,False
+20,Regional Emergency,Regional Emergency,10,Regional Support,8,Regional Support,1,Contact Centre,1,Emergency,True
+21,Regional Engineer,Regional Engineer,9,Regional Engineer,7,Regional Engineer,1,Contact Centre,2,Non-Emergency,False
+22,Asset Protection,Asset Protection,1,Asset Protection,1,Asset Protection,1,Contact Centre,2,Non-Emergency,False
+23,Asset Protection Partner Line,Asset Protection Partner Line,1,Asset Protection,1,Asset Protection,1,Contact Centre,2,Non-Emergency,False
+24,Partner Service 04,Partner Service 04,8,Partner Services,5,Operations,2,Operations,2,Non-Emergency,False
+25,Incident Line 01,Incident Line 01,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+26,Incident Line 02,Incident Line 02,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+27,Incident Line 03,Incident Line 03,13,Unmapped,11,Unmapped,3,Unmapped,2,Non-Emergency,False
+28,Booking Support,Booking Support,3,Booking Support,2,Booking Support,1,Contact Centre,2,Non-Emergency,False
+29,Priority Emergency Routing,Priority Emergency Routing,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
+30,Emergency Routing,Emergency Routing,4,Emergency,3,Core Operations,1,Contact Centre,1,Emergency,True
