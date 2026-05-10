@@ -8,6 +8,8 @@
 
 <p>Built for operations and service managers who need a clear view of demand, answer performance, abandonment pressure, and service-level risk.</p>
 
+<p><strong>Technical documentation:</strong> <a href="https://naadir-dev-portfolio.github.io/powerbi-call-handling-standards-of-service-dashboard/">View the published report documentation</a></p>
+
 <p>
   <a href="#overview">Overview</a> |
   <a href="#what-problem-it-solves">What It Solves</a> |
