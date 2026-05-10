@@ -1,0 +1,2419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Call Handling Standards of Service Dashboard — Report Documentation</title>
+  <meta name="description" content="A page-by-page breakdown of the Call Handling Standards of Service Dashboard Power BI report — visuals, fields, and DAX measures explained." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <style>
+    :root {
+      --bg: #f4f2ee;
+      --soft: #faf9f6;
+      --ink: #151515;
+      --muted: #6d6a64;
+      --line: #dedbd2;
+      --gold: #c8a24a;
+      --gold-soft: #efe1bd;
+      --shadow: 0 24px 70px rgba(0,0,0,.10);
+      --shadow-soft: 0 14px 40px rgba(0,0,0,.06);
+      --radius-xl: 28px;
+      --radius-lg: 18px;
+      --max: 1760px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.75), transparent 34rem),
+        linear-gradient(135deg, #f8f7f3 0%, var(--bg) 48%, #ebe7df 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -36px;
+      pointer-events: none;
+      background: url("portfolio/Screen1.png") center top / cover no-repeat;
+      opacity: .22;
+      filter: blur(8px) saturate(1.15) contrast(1.08);
+      transform: scale(1.04);
+      transform-origin: center;
+      z-index: 0;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .shell { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; position: relative; z-index: 1; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.20), transparent 28rem),
+        linear-gradient(135deg, #070a12 0%, #111827 48%, #24151d 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(90deg, black, transparent 76%);
+      z-index: 1;
+    }
+
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      filter: blur(8px) saturate(1.08);
+      transform: scale(1.04);
+      transition: opacity .25s ease;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero.has-image .hero-image { opacity: .22; }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(3,7,18,.92) 0%, rgba(8,13,25,.78) 54%, rgba(9,8,16,.64) 100%),
+        linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 44%, rgba(0,0,0,.16) 100%);
+      z-index: 1;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 36px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 26px;
+      align-items: end;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 12px 28px rgba(21,21,21,.18), 0 0 0 1px rgba(21,21,21,.08);
+      background: var(--ink);
+    }
+
+    .brand-text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .brand-tag {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .creator-mark {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(34px, 4.8vw, 68px);
+      line-height: .98;
+      letter-spacing: -.052em;
+      font-weight: 875;
+      text-wrap: balance;
+    }
+
+    .report-line {
+      margin: 18px 0 0;
+      font-size: clamp(20px, 2.2vw, 30px);
+      color: var(--muted);
+      letter-spacing: -.035em;
+      line-height: 1.12;
+    }
+
+    .report-line strong, .report-line span { color: var(--ink); }
+    .report-line strong { font-weight: 900; }
+    .report-line span { font-weight: 750; }
+
+    .hero-actions { min-width: 260px; display: grid; gap: 12px; }
+
+    .button {
+      min-height: 48px;
+      border: 1px solid #c8c2b6;
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: white;
+      color: var(--ink);
+      font-weight: 750;
+      transition: transform .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+
+    .button.primary { background: var(--ink); color: white; border-color: var(--ink); }
+    .button:hover { transform: translateY(-1px); border-color: var(--ink); }
+    .button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
+    .hero .brand-name, .hero .creator-mark, .hero .report-line, .hero .report-line strong, .hero .report-line span { color: white; }
+    .hero .brand-tag { color: rgba(255,255,255,.72); }
+    .hero .brand-logo { box-shadow: 0 16px 34px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.20); }
+    .hero .button { background: rgba(255,255,255,.10); color: white; border-color: rgba(255,255,255,.36); backdrop-filter: blur(10px); }
+    .hero .button.primary { background: white; color: #111827; border-color: white; }
+    .hero .button:hover { border-color: rgba(255,255,255,.82); }
+
+    .layout {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 18px 0 36px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 320px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-rows: auto auto;
+      align-content: start;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 16px;
+      align-items: center;
+      height: 80px;
+      min-height: 80px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.78);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .search-wrap { position: relative; }
+    .search-wrap span { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search-wrap input {
+      width: 100%;
+      height: 50px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 18px 0 44px;
+      background: white;
+      outline: none;
+    }
+    .search-wrap input:focus { border-color: var(--ink); }
+    .pager-controls { display: flex; gap: 10px; align-items: center; height: 50px; white-space: nowrap; }
+
+    .page-shell {
+      align-self: start;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: rgba(255,255,255,.86);
+      box-shadow: var(--shadow);
+    }
+
+    .page-card { animation: pageEnter .26s ease both; }
+    @keyframes pageEnter { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+
+    .page-header {
+      position: relative;
+      height: 198px;
+      min-height: 198px;
+      overflow: hidden;
+      padding: 26px 30px 18px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .page-header > div:first-child { min-width: 0; padding-right: 10px; }
+
+    .page-kicker { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .page-title { margin: 0; font-size: clamp(24px, 3vw, 40px); line-height: 1; letter-spacing: -.045em; font-weight: 875;  max-height: 2.12em; overflow: hidden; }
+    .page-summary {
+      margin: 14px 0 0;
+      width: 100%;
+      max-width: none;
+      height: 68px;
+      max-height: 68px;
+      overflow-y: auto;
+      padding-right: 10px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+      scrollbar-width: thin;
+    }
+
+    .screenshot-panel {
+      overflow: hidden;
+      min-height: 0;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.74);
+      display: grid;
+      place-items: center;
+      position: relative;
+      padding: 14px;
+    }
+
+    .screenshot-panel img {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      border-radius: 14px;
+      box-shadow: 0 18px 44px rgba(15, 25, 50, .18), 0 4px 10px rgba(15, 25, 50, .08);
+    }
+
+    .screenshot-placeholder {
+      width: min(660px, calc(100% - 48px));
+      aspect-ratio: 16/9;
+      border: 1px dashed #c8c2b6;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.72);
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .screenshot-placeholder strong { display: block; margin-bottom: 10px; color: var(--ink); font-size: 20px; }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--soft);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0,1fr);
+    }
+
+    .details-panel { min-height: 360px; height: 640px; }
+
+    .tab-strip { display: grid; grid-template-columns: repeat(2,1fr); border-bottom: 1px solid var(--line); background: white; }
+    .tab-button { border: 0; border-right: 1px solid var(--line); background: white; padding: 16px; color: var(--muted); font-weight: 850; }
+    .tab-button:last-child { border-right: 0; }
+    .tab-button.active { background: var(--ink); color: white; }
+    .tab-panel { display: none; min-height: 0; padding: 16px; overflow-y: auto; }
+    .tab-panel.active { display: block; }
+
+    .collection, .measure-grid { display: grid; gap: 12px; }
+    details.item, .measure-card, .empty {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+
+    details.item { overflow: hidden; }
+    details.item summary { list-style: none; cursor: pointer; padding: 15px; }
+    details.item summary::-webkit-details-marker { display: none; }
+    .item-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .item-title { margin: 0; font-size: 14px; font-weight: 850; }
+    .item-subtitle { margin: 5px 0 0; font-size: 12px; color: var(--muted); }
+    .plus { color: var(--muted); font-size: 18px; line-height: 1; transition: transform .18s ease; }
+    details[open] .plus { transform: rotate(45deg); }
+    .item-body { border-top: 1px solid var(--line); padding: 0 15px 14px; }
+
+    .meta-row { display: grid; grid-template-columns: 96px 1fr; gap: 12px; border-bottom: 1px solid var(--line); padding: 13px 0; }
+    .meta-row:last-child { border-bottom: 0; }
+    .meta-label { color: var(--muted); font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .meta-value { margin: 0; color: var(--ink); font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+
+    .measure-card { width: 100%; padding: 15px; text-align: left; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+    .measure-card:hover { transform: translateY(-1px); border-color: var(--ink); box-shadow: 0 16px 36px rgba(0,0,0,.08); }
+    .measure-card h4 { margin: 0; font-size: 14px; font-weight: 850; }
+    .measure-card p { margin: 8px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .empty { padding: 18px; color: var(--muted); font-size: 14px; }
+
+    .context-menu { position: sticky; top: 18px; height: fit-content; display: grid; align-content: start; gap: 14px; }
+    .context-card { border: 1px solid var(--line); border-radius: var(--radius-xl); background: rgba(255,255,255,.76); box-shadow: var(--shadow-soft); overflow: hidden; }
+    .context-card-inner { padding: 16px; }
+    .context-title { margin: 0 0 10px; font-size: 12px; color: var(--muted); font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    .page-nav { display: grid; gap: 8px; }
+    .page-nav button { border: 1px solid transparent; border-radius: 14px; background: transparent; padding: 12px; text-align: left; color: var(--muted); font-weight: 750; }
+    .page-nav button:hover, .page-nav button.active { border-color: var(--line); background: white; color: var(--ink); }
+    .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .stat { border: 1px solid var(--line); border-radius: 16px; background: white; padding: 14px; }
+    .stat strong { display: block; font-size: 34px; line-height: .95; letter-spacing: -.06em; }
+    .stat span { color: var(--muted); font-size: 12px; font-weight: 750; }
+
+    .drawer-root { position: fixed; inset: 0; z-index: 100; pointer-events: none; }
+    .drawer-root.open { pointer-events: auto; }
+    .drawer-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.30); opacity: 0; transition: opacity .2s ease; }
+    .drawer-root.open .drawer-backdrop { opacity: 1; }
+    .drawer { position: absolute; top: 0; right: 0; width: min(620px,100%); height: 100%; background: white; box-shadow: -30px 0 80px rgba(0,0,0,.24); transform: translateX(105%); transition: transform .26s ease; overflow: auto; }
+    .drawer-root.open .drawer { transform: translateX(0); }
+    .drawer-inner { padding: 28px; }
+    .drawer-head { display: flex; justify-content: space-between; gap: 18px; align-items: start; margin-bottom: 24px; }
+    .drawer-kicker { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    .drawer-title { margin: 0; font-size: 34px; line-height: 1; letter-spacing: -.06em; }
+    .code-block { margin: 0; max-height: 460px; overflow: auto; border-radius: 18px; background: #111; color: #f5f5f5; padding: 18px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+
+    .footer { border-top: 1px solid var(--line); background: rgba(255,255,255,.62); }
+    .footer-inner { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; padding: 26px 0; display: flex; justify-content: space-between; gap: 18px; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; }
+    .footer-brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(21,21,21,.12); }
+    .footer-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .footer-links a { font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--ink); }
+
+    @media (max-width: 1180px) {
+      .layout { grid-template-columns: 1fr; }
+      .context-menu { position: static; }
+      .visual-area { grid-template-columns: 1fr; }
+      .screenshot-panel { min-height: 0; }
+      .details-panel { height: 520px; }
+    }
+
+    @media (max-width: 760px) {
+      .hero.has-image .hero-image { opacity: .18; }
+      .hero-inner, .page-header { grid-template-columns: 1fr; }
+      .hero-actions, .pager-controls { width: 100%; }
+      .topbar { grid-template-columns: 1fr; height: 132px; min-height: 132px; align-items: stretch; }
+      .pager-controls { display: grid; grid-template-columns: 1fr 1fr; height: 50px; }
+      .visual-area { padding: 14px; }
+      .screenshot-panel { min-height: 260px; padding: 8px; }
+      .page-header { height: 236px; min-height: 236px; padding: 22px 18px 18px; }
+      .page-summary { height: 92px; max-height: 92px; }
+      .details-panel { height: 520px; }
+      .meta-row { grid-template-columns: 1fr; }
+      .brand-logo { width: 52px; height: 52px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero" id="hero">
+      <img class="hero-image" id="heroImage" src="portfolio/Screen1.png" alt="" aria-hidden="true" />
+      <div class="hero-inner">
+        <div>
+          <div class="brand-row">
+            <img class="brand-logo" src="assets/logo.png" alt="Naadir brand logo" />
+            <div class="brand-text">
+              <p class="brand-name">Naadir | Portfolio</p>
+              <p class="brand-tag">Power BI Report Documentation</p>
+            </div>
+          </div>
+          <p class="creator-mark">Report Build Designed and Documented by Naadir</p>
+          <p class="report-line"><strong>Report name:</strong> <span id="reportName">Call Handling Standards of Service Dashboard</span></p>
+        </div>
+        <div class="hero-actions">
+          <button class="button primary" type="button" data-action="focus-search">Search documentation</button>
+          <button class="button" type="button" data-action="open-current-measures">View page measures</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <main class="stage">
+        <section class="topbar" aria-label="Report navigation controls">
+          <div class="search-wrap">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Search pages, visuals, measures, fields, DAX..." autocomplete="off" />
+          </div>
+          <div class="pager-controls">
+            <button class="button" type="button" id="previousPage">← Previous</button>
+            <button class="button primary" type="button" id="nextPage">Next →</button>
+          </div>
+        </section>
+
+        <section class="page-shell" id="pageShell" aria-live="polite"></section>
+      </main>
+
+      <aside class="context-menu" aria-label="Page context menu">
+        <section class="context-card">
+          <div class="context-card-inner">
+            <p class="context-title">Pages</p>
+            <nav class="page-nav" id="pageNav"></nav>
+          </div>
+        </section>
+
+        <section class="context-card">
+          <div class="context-card-inner">
+            <p class="context-title">Current page</p>
+            <div class="stats">
+              <div class="stat"><strong id="visualCount">0</strong><span>Visuals</span></div>
+              <div class="stat"><strong id="measureCount">0</strong><span>Measures</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel details-panel" id="detailsPanel" aria-label="Current page visual and measure details"></section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="assets/logo.png" alt="Naadir brand logo" />
+          <span>© <span id="year"></span> Naadir | Portfolio. Call Handling Standards of Service Dashboard documentation.</span>
+        </div>
+        <nav class="footer-links" aria-label="Footer links">
+          <a href="https://naadir-dev-portfolio.github.io/" target="_blank" rel="noreferrer">Portfolio</a>
+          <a href="https://github.com/Naadir-Dev-Portfolio" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <div class="drawer-root" id="drawerRoot" aria-hidden="true">
+    <div class="drawer-backdrop" data-action="close-drawer"></div>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer-inner">
+        <div class="drawer-head">
+          <div>
+            <p class="drawer-kicker">Measure definition</p>
+            <h2 class="drawer-title" id="drawerTitle">Measure</h2>
+          </div>
+          <button class="button" type="button" data-action="close-drawer">Close</button>
+        </div>
+        <dl id="drawerMeta"></dl>
+        <p class="drawer-kicker" style="margin-top:24px;">DAX</p>
+        <pre class="code-block"><code id="drawerCode"></code></pre>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      var templateData = {
+        "reportName": "Call Handling Standards of Service Dashboard",
+        "pages": [
+                {
+                        "id": "page-1",
+                        "name": "Overall Standards of Service",
+                        "screenshot": "portfolio/powerbi-call-handling-standards-of-service-dashboard-full.png",
+                        "accent": "#2c5677",
+                        "summary": "National view of how the contact centre is performing against its Standards of Service target. Headline volume, answer/abandonment rates, the SoS % itself and an auto-generated narrative sit alongside trend lines and a call-group breakdown.",
+                        "visuals": [
+                                {
+                                        "id": "v1-1",
+                                        "name": "Latest Month Label",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Latest Month Label"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-2",
+                                        "name": "Headline Narrative",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Headline Narrative"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-3",
+                                        "name": "Abandonment rate",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Abandonment Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-4",
+                                        "name": "Standards",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Standards of Service %"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-5",
+                                        "name": "Calls offered",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Offered"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-6",
+                                        "name": "Calls abandoned",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Abandoned"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-7",
+                                        "name": "Answer rate",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Answer Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-8",
+                                        "name": "Calls answered",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Answered"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-9",
+                                        "name": "Emergency standards",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Emergency Standards of Service %"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-10",
+                                        "name": "Monthly call volumes",
+                                        "type": "Line chart",
+                                        "description": "Line chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Year Month]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-11",
+                                        "name": "Monthly standards and rates",
+                                        "type": "Line chart",
+                                        "description": "Line chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Year Month]"
+                                        ],
+                                        "measures": [
+                                                "Standards of Service %",
+                                                "Answer Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-12",
+                                        "name": "Demand by call group",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Call Group[Call Group]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered"
+                                        ]
+                                },
+                                {
+                                        "id": "v1-13",
+                                        "name": "Monthly summary",
+                                        "type": "Matrix",
+                                        "description": "Matrix extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Year Month]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered",
+                                                "Calls Abandoned",
+                                                "Standards of Service %"
+                                        ]
+                                }
+                        ],
+                        "measures": [
+                                {
+                                        "id": "p1-m1",
+                                        "name": "Latest Month Label",
+                                        "description": "Measure used by Latest Month Label.",
+                                        "dax": "FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), \"mmmm yyyy\")",
+                                        "usedInVisuals": [
+                                                "Latest Month Label"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m2",
+                                        "name": "Headline Narrative",
+                                        "description": "Measure used by Headline Narrative.",
+                                        "dax": "VAR StatusText = [Service Status]\nVAR LatestMonth = [Latest Month Label]\nVAR Sos = [Latest Month Standards of Service %]\nVAR QueueName = [Highest Abandonment Queue]\nVAR PeakHour = [Highest Pressure Hour]\nRETURN\nIF(\nISBLANK(Sos),\nBLANK(),\n\"As of \" & LatestMonth & \", Standards of Service is \" & FORMAT(Sos, \"0.0%\") & \" and currently \" & LOWER(StatusText) & \". The highest abandonment queue is \" & COALESCE(QueueName, \"not available\") & \", with demand peaking around \" & COALESCE(PeakHour, \"not available\") & \".\"\n)",
+                                        "usedInVisuals": [
+                                                "Headline Narrative"
+                                        ],
+                                        "notes": "Folder: 07 Narrative | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m3",
+                                        "name": "Service Status",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SWITCH(\nTRUE(),\nISBLANK([Standards of Service %]), BLANK(),\n[Standards of Service %] >= [Service Level Target %], \"On target\",\n\"Below target\"\n)",
+                                        "usedInVisuals": [
+                                                "Supports Headline Narrative"
+                                        ],
+                                        "notes": "Folder: 07 Narrative | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m4",
+                                        "name": "Standards of Service %",
+                                        "description": "Measure used by Standards, Monthly standards and rates, Monthly summary.",
+                                        "dax": "DIVIDE([Service Level Calls], [Service Level Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Standards",
+                                                "Monthly standards and rates",
+                                                "Monthly summary"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m5",
+                                        "name": "Service Level Calls",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m6",
+                                        "name": "Service Level Calls Offered",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m7",
+                                        "name": "Service Level Target %",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "0.90",
+                                        "usedInVisuals": [],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m8",
+                                        "name": "Latest Month Standards of Service %",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "VAR LatestMonth = CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date'))\nRETURN\nCALCULATE([Standards of Service %], REMOVEFILTERS('Dim Date'), 'Dim Date'[Month Start] = LatestMonth)",
+                                        "usedInVisuals": [
+                                                "Supports Headline Narrative"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m9",
+                                        "name": "Highest Abandonment Queue",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "VAR Candidates =\nADDCOLUMNS(\nALL('Dim Queue'[Queue]),\n\"__Abandoned\", [Calls Abandoned]\n)\nVAR Ranked =\nTOPN(1, Candidates, [__Abandoned], DESC, 'Dim Queue'[Queue], ASC)\nRETURN\nMAXX(Ranked, 'Dim Queue'[Queue])",
+                                        "usedInVisuals": [
+                                                "Supports Headline Narrative"
+                                        ],
+                                        "notes": "Folder: 07 Narrative | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m10",
+                                        "name": "Calls Abandoned",
+                                        "description": "Measure used by Calls abandoned, Monthly summary.",
+                                        "dax": "[Calls Abandoned Within Service Threshold] + [Calls Abandoned After Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Calls abandoned",
+                                                "Monthly summary"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m11",
+                                        "name": "Calls Abandoned Within Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned Within Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m12",
+                                        "name": "Calls Abandoned After Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned After Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m13",
+                                        "name": "Highest Pressure Hour",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "VAR Candidates =\nADDCOLUMNS(\nALL('Dim Time Slot'[Hour Label]),\n\"__Offered\", [Calls Offered]\n)\nVAR Ranked =\nTOPN(1, Candidates, [__Offered], DESC, 'Dim Time Slot'[Hour Label], ASC)\nRETURN\nMAXX(Ranked, 'Dim Time Slot'[Hour Label])",
+                                        "usedInVisuals": [
+                                                "Supports Headline Narrative"
+                                        ],
+                                        "notes": "Folder: 07 Narrative | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m14",
+                                        "name": "Calls Offered",
+                                        "description": "Measure used by Calls offered, Monthly call volumes, Demand by call group, Monthly summary.",
+                                        "dax": "SUM('Fact Telephony'[Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Calls offered",
+                                                "Monthly call volumes",
+                                                "Demand by call group",
+                                                "Monthly summary"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m15",
+                                        "name": "Abandonment Rate %",
+                                        "description": "Measure used by Abandonment rate.",
+                                        "dax": "DIVIDE([Calls Abandoned], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Abandonment rate"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m16",
+                                        "name": "Answer Rate %",
+                                        "description": "Measure used by Answer rate, Monthly standards and rates.",
+                                        "dax": "DIVIDE([Calls Answered], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Answer rate",
+                                                "Monthly standards and rates"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m17",
+                                        "name": "Calls Answered",
+                                        "description": "Measure used by Calls answered, Monthly call volumes, Monthly summary.",
+                                        "dax": "SUM('Fact Telephony'[Calls Answered Raw])",
+                                        "usedInVisuals": [
+                                                "Calls answered",
+                                                "Monthly call volumes",
+                                                "Monthly summary"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p1-m18",
+                                        "name": "Emergency Standards of Service %",
+                                        "description": "Measure used by Emergency standards.",
+                                        "dax": "CALCULATE(\n[Standards of Service %],\nKEEPFILTERS('Dim Emergency Classification'[Emergency Classification] = \"Emergency\")\n)",
+                                        "usedInVisuals": [
+                                                "Emergency standards"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                }
+                        ]
+                },
+                {
+                        "id": "page-2",
+                        "name": "Team and Call Group Performance",
+                        "screenshot": "portfolio/Screen1.png",
+                        "accent": "#3a7090",
+                        "summary": "Team-level and call-group-level performance comparison. Card KPIs are repeated per team and call group so a manager can spot which areas are dragging the headline SoS down, with per-working-day productivity measures to normalise across rota patterns.",
+                        "visuals": [
+                                {
+                                        "id": "v2-1",
+                                        "name": "Latest Month Label",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Latest Month Label"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-2",
+                                        "name": "Standards",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Standards of Service %"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-3",
+                                        "name": "Vs target",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Standards of Service Variance to Target"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-4",
+                                        "name": "Avg speed to answer",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Speed To Answer"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-5",
+                                        "name": "Avg handling time",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Handling Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-6",
+                                        "name": "Avg wait time",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Wait Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-7",
+                                        "name": "Longest wait",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Longest Wait Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-8",
+                                        "name": "Standards by team",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Team[Team]"
+                                        ],
+                                        "measures": [
+                                                "Standards of Service %",
+                                                "Service Level Target %"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-9",
+                                        "name": "Abandonment rate by call group",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Call Group[Call Group]"
+                                        ],
+                                        "measures": [
+                                                "Abandonment Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-10",
+                                        "name": "Standards trend",
+                                        "type": "Line chart",
+                                        "description": "Line chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Year Month]"
+                                        ],
+                                        "measures": [
+                                                "Standards of Service %",
+                                                "Service Level Target %"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-11",
+                                        "name": "Team and call group detail",
+                                        "type": "Matrix",
+                                        "description": "Matrix extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Team[Team]",
+                                                "Dim Call Group[Call Group]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered",
+                                                "Calls Abandoned",
+                                                "Standards of Service %",
+                                                "Average Speed To Answer",
+                                                "Average Handling Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-12",
+                                        "name": "Demand by day of week",
+                                        "type": "Clustered column chart",
+                                        "description": "Clustered column chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Day Of Week]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered"
+                                        ]
+                                },
+                                {
+                                        "id": "v2-13",
+                                        "name": "Demand by hour",
+                                        "type": "Clustered column chart",
+                                        "description": "Clustered column chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Time Slot[Hour Label]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Abandoned"
+                                        ]
+                                }
+                        ],
+                        "measures": [
+                                {
+                                        "id": "p2-m1",
+                                        "name": "Latest Month Label",
+                                        "description": "Measure used by Latest Month Label.",
+                                        "dax": "FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), \"mmmm yyyy\")",
+                                        "usedInVisuals": [
+                                                "Latest Month Label"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m2",
+                                        "name": "Standards of Service %",
+                                        "description": "Measure used by Standards, Standards by team, Standards trend, Team and call group detail.",
+                                        "dax": "DIVIDE([Service Level Calls], [Service Level Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Standards",
+                                                "Standards by team",
+                                                "Standards trend",
+                                                "Team and call group detail"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m3",
+                                        "name": "Service Level Calls",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m4",
+                                        "name": "Service Level Calls Offered",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m5",
+                                        "name": "Standards of Service Variance to Target",
+                                        "description": "Measure used by Vs target.",
+                                        "dax": "[Standards of Service %] - [Service Level Target %]",
+                                        "usedInVisuals": [
+                                                "Vs target"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: +0.0%;-0.0%;0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m6",
+                                        "name": "Service Level Target %",
+                                        "description": "Measure used by Standards by team, Standards trend.",
+                                        "dax": "0.90",
+                                        "usedInVisuals": [
+                                                "Standards by team",
+                                                "Standards trend"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m7",
+                                        "name": "Average Speed To Answer",
+                                        "description": "Measure used by Avg speed to answer, Team and call group detail.",
+                                        "dax": "DIVIDE([Total Answer Wait Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Avg speed to answer",
+                                                "Team and call group detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m8",
+                                        "name": "Total Answer Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Answer Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Speed To Answer"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m9",
+                                        "name": "Calls Answered",
+                                        "description": "Measure used by Team and call group detail.",
+                                        "dax": "SUM('Fact Telephony'[Calls Answered Raw])",
+                                        "usedInVisuals": [
+                                                "Team and call group detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m10",
+                                        "name": "Average Handling Time",
+                                        "description": "Measure used by Avg handling time, Team and call group detail.",
+                                        "dax": "DIVIDE([Total Handling Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Avg handling time",
+                                                "Team and call group detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m11",
+                                        "name": "Total Handling Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Handle Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Handling Time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m12",
+                                        "name": "Average Wait Time",
+                                        "description": "Measure used by Avg wait time.",
+                                        "dax": "DIVIDE([Total Wait Time Seconds], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Avg wait time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m13",
+                                        "name": "Total Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Wait Time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m14",
+                                        "name": "Calls Offered",
+                                        "description": "Measure used by Team and call group detail, Demand by day of week, Demand by hour.",
+                                        "dax": "SUM('Fact Telephony'[Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Team and call group detail",
+                                                "Demand by day of week",
+                                                "Demand by hour"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m15",
+                                        "name": "Longest Wait Time",
+                                        "description": "Measure used by Longest wait.",
+                                        "dax": "MAX('Fact Telephony'[Max Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Longest wait"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m16",
+                                        "name": "Abandonment Rate %",
+                                        "description": "Measure used by Abandonment rate by call group.",
+                                        "dax": "DIVIDE([Calls Abandoned], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Abandonment rate by call group"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m17",
+                                        "name": "Calls Abandoned",
+                                        "description": "Measure used by Team and call group detail, Demand by hour.",
+                                        "dax": "[Calls Abandoned Within Service Threshold] + [Calls Abandoned After Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Team and call group detail",
+                                                "Demand by hour"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m18",
+                                        "name": "Calls Abandoned Within Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned Within Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p2-m19",
+                                        "name": "Calls Abandoned After Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned After Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                }
+                        ]
+                },
+                {
+                        "id": "page-3",
+                        "name": "Queue, Demand and Abandonment Analysis",
+                        "screenshot": "portfolio/Screen2.png",
+                        "accent": "#5a4a7e",
+                        "summary": "Where pressure is building. Abandonment counts and rates by queue and time-of-day, longest wait time, and threshold-band breakdowns of which abandons happened inside vs outside the SoS window.",
+                        "visuals": [
+                                {
+                                        "id": "v3-1",
+                                        "name": "Latest Month Label",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Latest Month Label"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-2",
+                                        "name": "Inbound demand",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Offered"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-3",
+                                        "name": "Abandoned calls",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Abandoned"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-4",
+                                        "name": "Missed/RONA",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Missed"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-5",
+                                        "name": "Overflowed",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Overflowed"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-6",
+                                        "name": "Abandoned within target",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Abandoned Within Target"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-7",
+                                        "name": "Abandoned after target",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Abandoned After Target"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-8",
+                                        "name": "Queues with highest abandonment",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Queue[Queue]"
+                                        ],
+                                        "measures": [
+                                                "Calls Abandoned"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-9",
+                                        "name": "Abandonment and answer trend",
+                                        "type": "Line chart",
+                                        "description": "Line chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Year Month]"
+                                        ],
+                                        "measures": [
+                                                "Abandonment Rate %",
+                                                "Answer Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-10",
+                                        "name": "Peak periods by hour",
+                                        "type": "Clustered column chart",
+                                        "description": "Clustered column chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Time Slot[Hour Label]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Abandoned"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-11",
+                                        "name": "Wait-time service bands",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Queue[Queue]"
+                                        ],
+                                        "measures": [
+                                                "Answered Within Target",
+                                                "Answered After Target"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-12",
+                                        "name": "Emergency vs non-emergency",
+                                        "type": "Clustered column chart",
+                                        "description": "Clustered column chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Emergency Classification[Emergency Classification]"
+                                        ],
+                                        "measures": [
+                                                "Standards of Service %",
+                                                "Answer Rate %",
+                                                "Abandonment Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v3-13",
+                                        "name": "Queue detail",
+                                        "type": "Matrix",
+                                        "description": "Matrix extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Queue[Queue]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered",
+                                                "Calls Abandoned",
+                                                "Calls Missed",
+                                                "Calls Overflowed",
+                                                "Average Wait Time",
+                                                "Longest Wait Time"
+                                        ]
+                                }
+                        ],
+                        "measures": [
+                                {
+                                        "id": "p3-m1",
+                                        "name": "Latest Month Label",
+                                        "description": "Measure used by Latest Month Label.",
+                                        "dax": "FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), \"mmmm yyyy\")",
+                                        "usedInVisuals": [
+                                                "Latest Month Label"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m2",
+                                        "name": "Calls Offered",
+                                        "description": "Measure used by Inbound demand, Peak periods by hour, Queue detail.",
+                                        "dax": "SUM('Fact Telephony'[Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Inbound demand",
+                                                "Peak periods by hour",
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m3",
+                                        "name": "Calls Abandoned",
+                                        "description": "Measure used by Abandoned calls, Queues with highest abandonment, Peak periods by hour, Queue detail.",
+                                        "dax": "[Calls Abandoned Within Service Threshold] + [Calls Abandoned After Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Abandoned calls",
+                                                "Queues with highest abandonment",
+                                                "Peak periods by hour",
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m4",
+                                        "name": "Calls Abandoned Within Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned Within Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned",
+                                                "Supports Abandoned Within Target"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m5",
+                                        "name": "Calls Abandoned After Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned After Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned",
+                                                "Supports Abandoned After Target"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m6",
+                                        "name": "Calls Missed",
+                                        "description": "Measure used by Missed/RONA, Queue detail.",
+                                        "dax": "SUM('Fact Telephony'[RONA Raw])",
+                                        "usedInVisuals": [
+                                                "Missed/RONA",
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m7",
+                                        "name": "Calls Overflowed",
+                                        "description": "Measure used by Overflowed, Queue detail.",
+                                        "dax": "SUM('Fact Telephony'[Overflow Out Raw])",
+                                        "usedInVisuals": [
+                                                "Overflowed",
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m8",
+                                        "name": "Abandoned Within Target",
+                                        "description": "Measure used by Abandoned within target.",
+                                        "dax": "[Calls Abandoned Within Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Abandoned within target"
+                                        ],
+                                        "notes": "Folder: 04 Threshold Bands | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m9",
+                                        "name": "Abandoned After Target",
+                                        "description": "Measure used by Abandoned after target.",
+                                        "dax": "[Calls Abandoned After Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Abandoned after target"
+                                        ],
+                                        "notes": "Folder: 04 Threshold Bands | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m10",
+                                        "name": "Abandonment Rate %",
+                                        "description": "Measure used by Abandonment and answer trend, Emergency vs non-emergency.",
+                                        "dax": "DIVIDE([Calls Abandoned], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Abandonment and answer trend",
+                                                "Emergency vs non-emergency"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m11",
+                                        "name": "Answer Rate %",
+                                        "description": "Measure used by Abandonment and answer trend, Emergency vs non-emergency.",
+                                        "dax": "DIVIDE([Calls Answered], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Abandonment and answer trend",
+                                                "Emergency vs non-emergency"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m12",
+                                        "name": "Calls Answered",
+                                        "description": "Measure used by Queue detail.",
+                                        "dax": "SUM('Fact Telephony'[Calls Answered Raw])",
+                                        "usedInVisuals": [
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m13",
+                                        "name": "Answered Within Target",
+                                        "description": "Measure used by Wait-time service bands.",
+                                        "dax": "[Service Level Calls]",
+                                        "usedInVisuals": [
+                                                "Wait-time service bands"
+                                        ],
+                                        "notes": "Folder: 04 Threshold Bands | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m14",
+                                        "name": "Service Level Calls",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Answered Within Target",
+                                                "Supports Answered After Target",
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m15",
+                                        "name": "Answered After Target",
+                                        "description": "Measure used by Wait-time service bands.",
+                                        "dax": "MAX(0, [Calls Answered] - [Service Level Calls])",
+                                        "usedInVisuals": [
+                                                "Wait-time service bands"
+                                        ],
+                                        "notes": "Folder: 04 Threshold Bands | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m16",
+                                        "name": "Standards of Service %",
+                                        "description": "Measure used by Emergency vs non-emergency.",
+                                        "dax": "DIVIDE([Service Level Calls], [Service Level Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Emergency vs non-emergency"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m17",
+                                        "name": "Service Level Calls Offered",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m18",
+                                        "name": "Average Wait Time",
+                                        "description": "Measure used by Queue detail.",
+                                        "dax": "DIVIDE([Total Wait Time Seconds], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m19",
+                                        "name": "Total Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Wait Time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p3-m20",
+                                        "name": "Longest Wait Time",
+                                        "description": "Measure used by Queue detail.",
+                                        "dax": "MAX('Fact Telephony'[Max Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Queue detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                }
+                        ]
+                },
+                {
+                        "id": "page-4",
+                        "name": "Agent, Handling and Operational Efficiency",
+                        "screenshot": "portfolio/Screen3.png",
+                        "accent": "#2e6b85",
+                        "summary": "Operational efficiency on the answering side. Average speed-to-answer, average handling time and total handling time so a viewer can see whether long handling times are eating into the volume the centre can absorb.",
+                        "visuals": [
+                                {
+                                        "id": "v4-1",
+                                        "name": "Avg handling time",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Handling Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-2",
+                                        "name": "Avg talk time proxy",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Talk Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-3",
+                                        "name": "Total call time",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Total Call Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-4",
+                                        "name": "Answered per working day",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Answered Per Working Day"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-5",
+                                        "name": "Answered per agent",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Answered Per Agent"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-6",
+                                        "name": "Transfer rate",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Transfer Rate %"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-7",
+                                        "name": "Latest Month Label",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Latest Month Label"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-8",
+                                        "name": "Handling and answer time by team",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Team[Team]"
+                                        ],
+                                        "measures": [
+                                                "Average Handling Time",
+                                                "Average Speed To Answer"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-9",
+                                        "name": "In-hours and out-of-hours workload",
+                                        "type": "Clustered column chart",
+                                        "description": "Clustered column chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Working Hours[Working Hours]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-10",
+                                        "name": "Long handling call types",
+                                        "type": "Clustered bar chart",
+                                        "description": "Clustered bar chart extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Call Type[Call Type]"
+                                        ],
+                                        "measures": [
+                                                "Average Handling Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v4-11",
+                                        "name": "Operational efficiency detail",
+                                        "type": "Matrix",
+                                        "description": "Matrix extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Team[Team]",
+                                                "Dim Call Type[Call Type]"
+                                        ],
+                                        "measures": [
+                                                "Calls Answered",
+                                                "Average Handling Time",
+                                                "Average Speed To Answer",
+                                                "Total Handling Time Seconds",
+                                                "Calls Offered Per Working Day",
+                                                "Answer Rate %"
+                                        ]
+                                }
+                        ],
+                        "measures": [
+                                {
+                                        "id": "p4-m1",
+                                        "name": "Average Handling Time",
+                                        "description": "Measure used by Avg handling time, Handling and answer time by team, Long handling call types, Operational efficiency detail.",
+                                        "dax": "DIVIDE([Total Handling Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Avg handling time",
+                                                "Handling and answer time by team",
+                                                "Long handling call types",
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m2",
+                                        "name": "Total Handling Time Seconds",
+                                        "description": "Measure used by Operational efficiency detail.",
+                                        "dax": "SUM('Fact Telephony'[Handle Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m3",
+                                        "name": "Calls Answered",
+                                        "description": "Measure used by In-hours and out-of-hours workload, Operational efficiency detail.",
+                                        "dax": "SUM('Fact Telephony'[Calls Answered Raw])",
+                                        "usedInVisuals": [
+                                                "In-hours and out-of-hours workload",
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m4",
+                                        "name": "Average Talk Time",
+                                        "description": "Measure used by Avg talk time proxy.",
+                                        "dax": "[Average Handling Time]",
+                                        "usedInVisuals": [
+                                                "Avg talk time proxy"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m5",
+                                        "name": "Total Call Time",
+                                        "description": "Measure used by Total call time.",
+                                        "dax": "[Total Handling Time Seconds]",
+                                        "usedInVisuals": [
+                                                "Total call time"
+                                        ],
+                                        "notes": "Folder: 05 Productivity | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m6",
+                                        "name": "Calls Answered Per Working Day",
+                                        "description": "Measure used by Answered per working day.",
+                                        "dax": "DIVIDE([Calls Answered], [Active Working Days])",
+                                        "usedInVisuals": [
+                                                "Answered per working day"
+                                        ],
+                                        "notes": "Folder: 05 Productivity | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m7",
+                                        "name": "Active Working Days",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "CALCULATE(\nDISTINCTCOUNT('Fact Telephony'[Date Key]),\nKEEPFILTERS('Dim Date'[Is Working Day] = TRUE())\n)",
+                                        "usedInVisuals": [
+                                                "Supports Calls Answered Per Working Day",
+                                                "Supports Calls Offered Per Working Day"
+                                        ],
+                                        "notes": "Folder: 05 Productivity | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m8",
+                                        "name": "Calls Answered Per Agent",
+                                        "description": "Measure used by Answered per agent.",
+                                        "dax": "BLANK()",
+                                        "usedInVisuals": [
+                                                "Answered per agent"
+                                        ],
+                                        "notes": "Folder: 09 Unavailable Source Fields | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m9",
+                                        "name": "Transfer Rate %",
+                                        "description": "Measure used by Transfer rate.",
+                                        "dax": "BLANK()",
+                                        "usedInVisuals": [
+                                                "Transfer rate"
+                                        ],
+                                        "notes": "Folder: 09 Unavailable Source Fields | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m10",
+                                        "name": "Latest Month Label",
+                                        "description": "Measure used by Latest Month Label.",
+                                        "dax": "FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), \"mmmm yyyy\")",
+                                        "usedInVisuals": [
+                                                "Latest Month Label"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m11",
+                                        "name": "Average Speed To Answer",
+                                        "description": "Measure used by Handling and answer time by team, Operational efficiency detail.",
+                                        "dax": "DIVIDE([Total Answer Wait Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Handling and answer time by team",
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m12",
+                                        "name": "Total Answer Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Answer Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Speed To Answer"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m13",
+                                        "name": "Calls Offered",
+                                        "description": "Measure used by In-hours and out-of-hours workload.",
+                                        "dax": "SUM('Fact Telephony'[Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "In-hours and out-of-hours workload"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m14",
+                                        "name": "Calls Offered Per Working Day",
+                                        "description": "Measure used by Operational efficiency detail.",
+                                        "dax": "DIVIDE([Calls Offered], [Active Working Days])",
+                                        "usedInVisuals": [
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 05 Productivity | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p4-m15",
+                                        "name": "Answer Rate %",
+                                        "description": "Measure used by Operational efficiency detail.",
+                                        "dax": "DIVIDE([Calls Answered], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Operational efficiency detail"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                }
+                        ]
+                },
+                {
+                        "id": "page-5",
+                        "name": "Raw Data",
+                        "screenshot": "portfolio/Screen4.png",
+                        "accent": "#4a5a72",
+                        "summary": "A drill-anywhere raw data view of the telephony fact table for ad-hoc inspection. Slicers expose every dimension (team, queue, date, time slot, call type) and the table renders the underlying records with the volume measures aggregated row-by-row.",
+                        "visuals": [
+                                {
+                                        "id": "v5-1",
+                                        "name": "Latest Month Label",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Latest Month Label"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-2",
+                                        "name": "Active Days",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Active Days"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-3",
+                                        "name": "Calls offered",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Offered"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-4",
+                                        "name": "Calls answered",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Answered"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-5",
+                                        "name": "Average Wait (Seconds)",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Average Wait Time"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-6",
+                                        "name": "Calls abandoned",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Calls Abandoned"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-7",
+                                        "name": "Standards of Service",
+                                        "type": "Card",
+                                        "description": "Card extracted from the PBIP report definition.",
+                                        "fields": [],
+                                        "measures": [
+                                                "Standards of Service %"
+                                        ]
+                                },
+                                {
+                                        "id": "v5-8",
+                                        "name": "Detailed aggregate records",
+                                        "type": "Matrix",
+                                        "description": "Matrix extracted from the PBIP report definition.",
+                                        "fields": [
+                                                "Dim Date[Date]",
+                                                "Dim Time Slot[Half Hour]",
+                                                "Dim Team[Team]",
+                                                "Dim Call Group[Call Group]",
+                                                "Dim Queue[Queue]",
+                                                "Dim Call Type[Call Type]",
+                                                "Dim Emergency Classification[Emergency Classification]",
+                                                "Dim Working Hours[Working Hours]"
+                                        ],
+                                        "measures": [
+                                                "Calls Offered",
+                                                "Calls Answered",
+                                                "Calls Abandoned",
+                                                "Standards of Service %",
+                                                "Average Speed To Answer",
+                                                "Average Handling Time",
+                                                "Total Talk Time"
+                                        ]
+                                }
+                        ],
+                        "measures": [
+                                {
+                                        "id": "p5-m1",
+                                        "name": "Latest Month Label",
+                                        "description": "Measure used by Latest Month Label.",
+                                        "dax": "FORMAT(CALCULATE(MAX('Dim Date'[Month Start]), REMOVEFILTERS('Dim Date')), \"mmmm yyyy\")",
+                                        "usedInVisuals": [
+                                                "Latest Month Label"
+                                        ],
+                                        "notes": "Folder: 06 Latest Snapshot | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m2",
+                                        "name": "Active Days",
+                                        "description": "Measure used by Active Days.",
+                                        "dax": "DISTINCTCOUNT('Fact Telephony'[Date Key])",
+                                        "usedInVisuals": [
+                                                "Active Days"
+                                        ],
+                                        "notes": "Folder: 05 Productivity | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m3",
+                                        "name": "Calls Offered",
+                                        "description": "Measure used by Calls offered, Detailed aggregate records.",
+                                        "dax": "SUM('Fact Telephony'[Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Calls offered",
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m4",
+                                        "name": "Calls Answered",
+                                        "description": "Measure used by Calls answered, Detailed aggregate records.",
+                                        "dax": "SUM('Fact Telephony'[Calls Answered Raw])",
+                                        "usedInVisuals": [
+                                                "Calls answered",
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m5",
+                                        "name": "Average Wait Time",
+                                        "description": "Measure used by Average Wait (Seconds).",
+                                        "dax": "DIVIDE([Total Wait Time Seconds], [Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Average Wait (Seconds)"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m6",
+                                        "name": "Total Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Wait Time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m7",
+                                        "name": "Calls Abandoned",
+                                        "description": "Measure used by Calls abandoned, Detailed aggregate records.",
+                                        "dax": "[Calls Abandoned Within Service Threshold] + [Calls Abandoned After Service Threshold]",
+                                        "usedInVisuals": [
+                                                "Calls abandoned",
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m8",
+                                        "name": "Calls Abandoned Within Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned Within Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m9",
+                                        "name": "Calls Abandoned After Service Threshold",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Calls Abandoned After Threshold Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Calls Abandoned"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m10",
+                                        "name": "Standards of Service %",
+                                        "description": "Measure used by Standards of Service, Detailed aggregate records.",
+                                        "dax": "DIVIDE([Service Level Calls], [Service Level Calls Offered])",
+                                        "usedInVisuals": [
+                                                "Standards of Service",
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 02 Rates | Format: 0.0% | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m11",
+                                        "name": "Service Level Calls",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m12",
+                                        "name": "Service Level Calls Offered",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Service Level Calls Offered Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Standards of Service %"
+                                        ],
+                                        "notes": "Folder: 01 Volume | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m13",
+                                        "name": "Average Speed To Answer",
+                                        "description": "Measure used by Detailed aggregate records.",
+                                        "dax": "DIVIDE([Total Answer Wait Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m14",
+                                        "name": "Total Answer Wait Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Answer Wait Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Speed To Answer"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m15",
+                                        "name": "Average Handling Time",
+                                        "description": "Measure used by Detailed aggregate records.",
+                                        "dax": "DIVIDE([Total Handling Time Seconds], [Calls Answered])",
+                                        "usedInVisuals": [
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0.0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m16",
+                                        "name": "Total Handling Time Seconds",
+                                        "description": "Supporting measure referenced by page measures.",
+                                        "dax": "SUM('Fact Telephony'[Handle Time Seconds Raw])",
+                                        "usedInVisuals": [
+                                                "Supports Average Handling Time",
+                                                "Supports Total Talk Time"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                },
+                                {
+                                        "id": "p5-m17",
+                                        "name": "Total Talk Time",
+                                        "description": "Measure used by Detailed aggregate records.",
+                                        "dax": "[Total Handling Time Seconds]",
+                                        "usedInVisuals": [
+                                                "Detailed aggregate records"
+                                        ],
+                                        "notes": "Folder: 03 Wait and Handle Time | Format: #,##0 | Table: Fact Telephony"
+                                }
+                        ]
+                }
+        ]
+};
+
+      var state = { activePageIndex: 0, activeTabs: {}, query: '' };
+
+      var el = {
+        hero: document.getElementById('hero'),
+        heroImage: document.getElementById('heroImage'),
+        reportName: document.getElementById('reportName'),
+        pageShell: document.getElementById('pageShell'),
+        pageNav: document.getElementById('pageNav'),
+        searchInput: document.getElementById('searchInput'),
+        previousPage: document.getElementById('previousPage'),
+        nextPage: document.getElementById('nextPage'),
+        visualCount: document.getElementById('visualCount'),
+        measureCount: document.getElementById('measureCount'),
+        detailsPanel: document.getElementById('detailsPanel'),
+        drawerRoot: document.getElementById('drawerRoot'),
+        drawerTitle: document.getElementById('drawerTitle'),
+        drawerMeta: document.getElementById('drawerMeta'),
+        drawerCode: document.getElementById('drawerCode'),
+        year: document.getElementById('year')
+      };
+
+      function hasPlaceholder(value) { return String(value || '').includes('{{'); }
+      function text(value) { return String(value || '').toLowerCase().trim(); }
+      function esc(value) {
+        return String(value ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function pageMatches(page, query) {
+        var q = text(query);
+        if (!q) return true;
+        var combined = [
+          page.name,
+          page.summary,
+          ...page.visuals.flatMap(v => [v.name, v.type, v.description, ...v.fields, ...v.measures]),
+          ...page.measures.flatMap(m => [m.name, m.description, m.dax, m.notes, ...m.usedInVisuals])
+        ].join(' ');
+        return text(combined).includes(q);
+      }
+
+      function visiblePages() { return templateData.pages.filter(page => pageMatches(page, state.query)); }
+
+      function currentPage() {
+        var pages = visiblePages();
+        if (!pages.length) return null;
+        if (state.activePageIndex > pages.length - 1) state.activePageIndex = 0;
+        return pages[state.activePageIndex];
+      }
+
+      function activeTab(pageId) { return state.activeTabs[pageId] || 'visuals'; }
+
+      function row(label, value) {
+        var display = Array.isArray(value) ? value.join(', ') : value;
+        if (!display) return '';
+        return '<div class="meta-row"><dt class="meta-label">' + esc(label) + '</dt><dd class="meta-value">' + esc(display) + '</dd></div>';
+      }
+
+      function screenshot(page) {
+        if (page.screenshot && !hasPlaceholder(page.screenshot)) {
+          return '<img src="' + esc(page.screenshot) + '" alt="' + esc(page.name) + ' screenshot" />';
+        }
+        return '<div class="screenshot-placeholder"><div><strong>Screenshot pending</strong><span>This page&rsquo;s screenshot will appear here once it has been added to the portfolio folder.</span></div></div>';
+      }
+
+      function visuals(page) {
+        if (!page.visuals.length) return '<div class="empty">No visuals documented for this page yet.</div>';
+        return '<div class="collection">' + page.visuals.map(v => (
+          '<details class="item">' +
+            '<summary><div class="item-head"><div><h4 class="item-title">' + esc(v.name) + '</h4><p class="item-subtitle">' + esc(v.type) + '</p></div><span class="plus">+</span></div></summary>' +
+            '<div class="item-body"><dl>' + row('Description', v.description) + row('Fields', v.fields) + row('Measures', v.measures) + '</dl></div>' +
+          '</details>'
+        )).join('') + '</div>';
+      }
+
+      function measures(page) {
+        if (!page.measures.length) return '<div class="empty">No measures documented for this page yet.</div>';
+        return '<div class="measure-grid">' + page.measures.map(m => (
+          '<button class="measure-card" type="button" data-measure-id="' + esc(m.id) + '"><h4>' + esc(m.name) + '</h4><p>' + esc(m.description) + '</p></button>'
+        )).join('') + '</div>';
+      }
+
+      function renderNav() {
+        var pages = visiblePages();
+        el.pageNav.innerHTML = pages.length ? pages.map((page, index) => (
+          '<button type="button" class="' + (index === state.activePageIndex ? 'active' : '') + '" data-page-index="' + index + '">' + esc(page.name) + '</button>'
+        )).join('') : '<div class="empty">No matching pages.</div>';
+        el.previousPage.disabled = pages.length <= 1;
+        el.nextPage.disabled = pages.length <= 1;
+      }
+
+      function detailPanel(page, tab) {
+        return '<div class="tab-strip">' +
+          '<button class="tab-button ' + (tab === 'visuals' ? 'active' : '') + '" type="button" data-tab="visuals">Visuals</button>' +
+          '<button class="tab-button ' + (tab === 'measures' ? 'active' : '') + '" type="button" data-tab="measures">Measures</button>' +
+        '</div>' +
+        '<div class="tab-panel ' + (tab === 'visuals' ? 'active' : '') + '">' + visuals(page) + '</div>' +
+        '<div class="tab-panel ' + (tab === 'measures' ? 'active' : '') + '">' + measures(page) + '</div>';
+      }
+
+      function renderPage(page) {
+        var pages = visiblePages();
+        var tab = activeTab(page.id);
+        el.visualCount.textContent = page.visuals.length;
+        el.measureCount.textContent = page.measures.length;
+        el.detailsPanel.innerHTML = detailPanel(page, tab);
+        el.pageShell.innerHTML =
+          '<article class="page-card">' +
+            '<div class="page-header">' +
+              '<div><p class="page-kicker">Report page</p><h2 class="page-title">' + esc(page.name) + '</h2><p class="page-summary">' + esc(page.summary) + '</p></div>' +
+              '<div class="page-count">' + (state.activePageIndex + 1) + ' / ' + pages.length + '</div>' +
+            '</div>' +
+            '<div class="visual-area">' +
+              '<div class="screenshot-panel">' + screenshot(page) + '</div>' +
+            '</div>' +
+          '</article>';
+        syncDetailsPanelHeight();
+      }
+
+      function syncDetailsPanelHeight() {
+        if (!el.detailsPanel) return;
+        var panel = document.querySelector('.screenshot-panel');
+        if (!panel || window.matchMedia('(max-width: 1180px)').matches) {
+          el.detailsPanel.style.height = '';
+          return;
+        }
+        var panelRect = panel.getBoundingClientRect();
+        var detailsRect = el.detailsPanel.getBoundingClientRect();
+        var height = Math.max(360, Math.round(panelRect.bottom - detailsRect.top));
+        el.detailsPanel.style.height = height + 'px';
+      }
+
+      function renderEmpty() {
+        el.visualCount.textContent = '0';
+        el.measureCount.textContent = '0';
+        el.detailsPanel.innerHTML = '<div class="empty">No matching pages.</div>';
+        el.pageShell.innerHTML = '<section class="page-card"><div class="page-header"><div><p class="page-kicker">Search result</p><h2 class="page-title">No matching pages</h2><p class="page-summary">No page on this report matched your search. Try a shorter or different term.</p></div></div></section>';
+      }
+
+      function render() {
+        var page = currentPage();
+        el.reportName.textContent = templateData.reportName;
+        renderNav();
+        if (!page) { renderEmpty(); return; }
+        renderPage(page);
+      }
+
+      function openDrawer(measure) {
+        el.drawerTitle.textContent = measure.name;
+        el.drawerCode.textContent = measure.dax;
+        el.drawerMeta.innerHTML = row('Definition', measure.description) + row('Used in', measure.usedInVisuals) + row('Notes', measure.notes);
+        el.drawerRoot.classList.add('open');
+        el.drawerRoot.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeDrawer() {
+        el.drawerRoot.classList.remove('open');
+        el.drawerRoot.setAttribute('aria-hidden', 'true');
+      }
+
+      function movePage(direction) {
+        var pages = visiblePages();
+        if (!pages.length) return;
+        state.activePageIndex = (state.activePageIndex + direction + pages.length) % pages.length;
+        render();
+      }
+
+      function initHeroImage() {
+        if (!el.heroImage || hasPlaceholder(el.heroImage.getAttribute('src'))) return;
+        el.heroImage.addEventListener('load', () => el.hero.classList.add('has-image'));
+        el.heroImage.addEventListener('error', () => el.hero.classList.remove('has-image'));
+        if (el.heroImage.complete && el.heroImage.naturalWidth > 0) el.hero.classList.add('has-image');
+      }
+
+      document.addEventListener('click', event => {
+        var pageButton = event.target.closest('[data-page-index]');
+        if (pageButton) { state.activePageIndex = Number(pageButton.dataset.pageIndex); render(); return; }
+
+        var tabButton = event.target.closest('[data-tab]');
+        if (tabButton) {
+          var page = currentPage();
+          if (page) { state.activeTabs[page.id] = tabButton.dataset.tab; render(); }
+          return;
+        }
+
+        var measureButton = event.target.closest('[data-measure-id]');
+        if (measureButton) {
+          var current = currentPage();
+          var measure = current?.measures.find(item => item.id === measureButton.dataset.measureId);
+          if (measure) openDrawer(measure);
+          return;
+        }
+
+        var action = event.target.closest('[data-action]')?.dataset.action;
+        if (action === 'close-drawer') { closeDrawer(); return; }
+        if (action === 'focus-search') { el.searchInput.focus(); return; }
+        if (action === 'open-current-measures') {
+          var active = currentPage();
+          if (active) { state.activeTabs[active.id] = 'measures'; render(); }
+        }
+      });
+
+      el.previousPage.addEventListener('click', () => movePage(-1));
+      el.nextPage.addEventListener('click', () => movePage(1));
+      window.addEventListener('resize', syncDetailsPanelHeight);
+      el.searchInput.addEventListener('input', event => {
+        state.query = event.target.value;
+        state.activePageIndex = 0;
+        render();
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeDrawer();
+        if (event.key === 'ArrowRight' && !event.target.matches('input')) movePage(1);
+        if (event.key === 'ArrowLeft' && !event.target.matches('input')) movePage(-1);
+      });
+
+      el.year.textContent = new Date().getFullYear();
+      initHeroImage();
+      render();
+    })();
+  </script>
+</body>
+</html>
