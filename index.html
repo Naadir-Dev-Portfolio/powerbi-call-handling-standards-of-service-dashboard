@@ -2190,7 +2190,7 @@
         ]
 };
 
-      var state = { activePageIndex: 0, activeTabs: {}, query: '' };
+      var state = { activePageIndex: 0, activeTabs: {}, preferredTab: 'visuals', query: '' };
 
       var el = {
         hero: document.getElementById('hero'),
@@ -2213,6 +2213,82 @@
 
       function hasPlaceholder(value) { return String(value || '').includes('{{'); }
       function text(value) { return String(value || '').toLowerCase().trim(); }
+      function normalizeSearch(value) {
+        return text(value)
+          .normalize('NFKD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/&/g, ' and ')
+          .replace(/%/g, ' pct ')
+          .replace(/[^a-z0-9]+/g, ' ')
+          .trim();
+      }
+      function stemToken(token) {
+        if (token.length > 4 && token.endsWith('ies')) return token.slice(0, -3) + 'y';
+        if (token.length > 3 && token.endsWith('s') && !token.endsWith('ss')) return token.slice(0, -1);
+        return token;
+      }
+      function queryParts(query) {
+        var normalized = normalizeSearch(query);
+        return {
+          normalized,
+          tokens: normalized ? normalized.split(/\s+/).map(stemToken) : []
+        };
+      }
+      function fieldScore(value, query, weight) {
+        var normalized = normalizeSearch(value);
+        if (!normalized || !query.normalized) return 0;
+
+        var score = 0;
+        var tokens = normalized.split(/\s+/).map(stemToken);
+        var tokenMatches = query.tokens.filter(token => tokens.includes(token)).length;
+
+        if (normalized === query.normalized) score += 1200 * weight;
+        if (normalized.startsWith(query.normalized + ' ')) score += 900 * weight;
+        if (normalized.includes(query.normalized)) score += 700 * weight;
+        if (tokenMatches === query.tokens.length) score += 240 * weight;
+        score += tokenMatches * 60 * weight;
+        if (tokens[0] === query.tokens[0]) score += 80 * weight;
+
+        return score;
+      }
+      function nameBoost(value, query) {
+        var normalized = normalizeSearch(value);
+        if (!normalized || !query.normalized) return 0;
+        var stemmedName = normalized.split(/\s+/).map(stemToken).join(' ');
+        var coreName = normalized
+          .split(/\s+/)
+          .filter(token => !['k', 'gbp'].includes(token))
+          .map(stemToken)
+          .join(' ');
+        var stemmedQuery = query.tokens.join(' ');
+
+        if (normalized === query.normalized || stemmedName === stemmedQuery || coreName === stemmedQuery) return 50000;
+        if (normalized.startsWith(query.normalized + ' ') || stemmedName.startsWith(stemmedQuery + ' ') || coreName.startsWith(stemmedQuery + ' ')) return 25000;
+        return 0;
+      }
+      function visualScore(visual, query) {
+        return nameBoost(visual.name, query) +
+          fieldScore(visual.name, query, 8) +
+          fieldScore(visual.measures.join(' '), query, 4) +
+          fieldScore(visual.fields.join(' '), query, 3) +
+          fieldScore(visual.description, query, 2) +
+          fieldScore(visual.type, query, 1);
+      }
+      function measureScore(measure, query) {
+        return nameBoost(measure.name, query) +
+          fieldScore(measure.name, query, 8) +
+          fieldScore(measure.usedInVisuals.join(' '), query, 4) +
+          fieldScore(measure.description, query, 2) +
+          fieldScore(measure.notes, query, 1) +
+          fieldScore(measure.dax, query, 1);
+      }
+      function rankedItems(items, query, scoreFn) {
+        if (!query.normalized) return items;
+        return items
+          .map((item, index) => ({ item, index, score: scoreFn(item, query) }))
+          .sort((a, b) => b.score - a.score || a.index - b.index)
+          .map(result => result.item);
+      }
       function esc(value) {
         return String(value ?? '')
           .replaceAll('&', '&amp;')
@@ -2222,19 +2298,25 @@
           .replaceAll("'", '&#039;');
       }
 
-      function pageMatches(page, query) {
-        var q = text(query);
-        if (!q) return true;
-        var combined = [
-          page.name,
-          page.summary,
-          ...page.visuals.flatMap(v => [v.name, v.type, v.description, ...v.fields, ...v.measures]),
-          ...page.measures.flatMap(m => [m.name, m.description, m.dax, m.notes, ...m.usedInVisuals])
-        ].join(' ');
-        return text(combined).includes(q);
+      function pageSearchScore(page, query) {
+        if (!query.normalized) return 1;
+        var pageScore = fieldScore(page.name, query, 5) + fieldScore(page.summary, query, 2);
+        var visualScores = page.visuals.map(visual => visualScore(visual, query));
+        var measureScores = page.measures.map(measure => measureScore(measure, query));
+        return pageScore +
+          visualScores.reduce((sum, score) => sum + score, 0) +
+          measureScores.reduce((sum, score) => sum + score, 0);
       }
 
-      function visiblePages() { return templateData.pages.filter(page => pageMatches(page, state.query)); }
+      function visiblePages() {
+        var query = queryParts(state.query);
+        if (!query.normalized) return templateData.pages;
+        return templateData.pages
+          .map((page, index) => ({ page, index, score: pageSearchScore(page, query) }))
+          .filter(result => result.score > 0)
+          .sort((a, b) => b.score - a.score || a.index - b.index)
+          .map(result => result.page);
+      }
 
       function currentPage() {
         var pages = visiblePages();
@@ -2243,7 +2325,7 @@
         return pages[state.activePageIndex];
       }
 
-      function activeTab(pageId) { return state.activeTabs[pageId] || 'visuals'; }
+      function activeTab(pageId) { return state.activeTabs[pageId] || state.preferredTab; }
 
       function row(label, value) {
         var display = Array.isArray(value) ? value.join(', ') : value;
@@ -2260,7 +2342,9 @@
 
       function visuals(page) {
         if (!page.visuals.length) return '<div class="empty">No visuals documented for this page yet.</div>';
-        return '<div class="collection">' + page.visuals.map(v => (
+        var query = queryParts(state.query);
+        var items = rankedItems(page.visuals, query, visualScore);
+        return '<div class="collection">' + items.map(v => (
           '<details class="item">' +
             '<summary><div class="item-head"><div><h4 class="item-title">' + esc(v.name) + '</h4><p class="item-subtitle">' + esc(v.type) + '</p></div><span class="plus">+</span></div></summary>' +
             '<div class="item-body"><dl>' + row('Description', v.description) + row('Fields', v.fields) + row('Measures', v.measures) + '</dl></div>' +
@@ -2270,7 +2354,9 @@
 
       function measures(page) {
         if (!page.measures.length) return '<div class="empty">No measures documented for this page yet.</div>';
-        return '<div class="measure-grid">' + page.measures.map(m => (
+        var query = queryParts(state.query);
+        var items = rankedItems(page.measures, query, measureScore);
+        return '<div class="measure-grid">' + items.map(m => (
           '<button class="measure-card" type="button" data-measure-id="' + esc(m.id) + '"><h4>' + esc(m.name) + '</h4><p>' + esc(m.description) + '</p></button>'
         )).join('') + '</div>';
       }
@@ -2374,7 +2460,11 @@
         var tabButton = event.target.closest('[data-tab]');
         if (tabButton) {
           var page = currentPage();
-          if (page) { state.activeTabs[page.id] = tabButton.dataset.tab; render(); }
+          if (page) {
+            state.preferredTab = tabButton.dataset.tab;
+            state.activeTabs[page.id] = state.preferredTab;
+            render();
+          }
           return;
         }
 
